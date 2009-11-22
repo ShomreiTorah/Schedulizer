@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+	<!-- EF Runtime content -->
+	<edmx:Runtime>
+		<!-- SSDL content -->
+		<edmx:StorageModels>
+			<Schema Namespace="ScheduleModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
+				<EntityContainer Name="ScheduleModelStoreContainer">
+					<EntitySet Name="ScheduleDates" EntityType="ScheduleModel.Store.ScheduleDates" store:Type="Tables" Schema="Schedules" />
+					<EntitySet Name="ScheduleTimes" EntityType="ScheduleModel.Store.ScheduleTimes" store:Type="Tables" Schema="Schedules" />
+					<AssociationSet Name="ScheduleTimesForeignKey" Association="ScheduleModel.Store.ScheduleTimesForeignKey">
+						<End Role="ScheduleDates" EntitySet="ScheduleDates" />
+						<End Role="ScheduleTimes" EntitySet="ScheduleTimes" />
+					</AssociationSet>
+				</EntityContainer>
+				<EntityType Name="ScheduleDates">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+					<Property Name="Date" Type="datetime" Nullable="false" />
+					<Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="128" />
+				</EntityType>
+				<EntityType Name="ScheduleTimes">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+					<Property Name="CellID" Type="uniqueidentifier" Nullable="false" />
+					<Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="64" />
+					<Property Name="Time" Type="datetime" Nullable="false" />
+					<Property Name="IsBold" Type="bit" Nullable="false" />
+					<Property Name="LastModified" Type="datetime" Nullable="false" />
+				</EntityType>
+				<Association Name="ScheduleTimesForeignKey">
+					<End Role="ScheduleDates" Type="ScheduleModel.Store.ScheduleDates" Multiplicity="1">
+						<OnDelete Action="Cascade" />
+					</End>
+					<End Role="ScheduleTimes" Type="ScheduleModel.Store.ScheduleTimes" Multiplicity="*" />
+
+					<ReferentialConstraint>
+						<Principal Role="ScheduleDates">
+							<PropertyRef Name="ID" />
+						</Principal>
+						<Dependent Role="ScheduleTimes">
+							<PropertyRef Name="CellID" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+			</Schema>
+		</edmx:StorageModels>
+		<!-- CSDL content -->
+		<edmx:ConceptualModels>
+			<Schema Namespace="ScheduleModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+				<EntityContainer Name="ScheduleContext">
+					<EntitySet Name="CellSet" EntityType="ScheduleModel.ScheduleCell" />
+					<EntitySet Name="TimeSet" EntityType="ScheduleModel.ScheduleTime" />
+					<AssociationSet Name="ScheduleTimesForeignKey" Association="ScheduleModel.ScheduleTimesForeignKey">
+						<End Role="ScheduleDates" EntitySet="CellSet" />
+						<End Role="ScheduleTimes" EntitySet="TimeSet" />
+					</AssociationSet>
+				</EntityContainer>
+				<EntityType Name="ScheduleCell">
+					<Documentation>
+						<Summary>A cell in the schedule.</Summary>
+					</Documentation>
+					<Key>
+						<PropertyRef Name="Id" />
+					</Key>
+					<Property Name="EnglishDate" Type="DateTime" Nullable="false" a:SetterAccess="Private" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+					<Property Name="Title" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+					<NavigationProperty Name="Times" Relationship="ScheduleModel.ScheduleTimesForeignKey" FromRole="ScheduleDates" ToRole="ScheduleTimes" a:SetterAccess="Private" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+					<Property Name="Id" Type="Guid" Nullable="false" a:SetterAccess="Private" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" a:GetterAccess="Private" />
+				</EntityType>
+				<EntityType Name="ScheduleTime">
+					<Documentation>
+						<Summary>A single time value within a cell.</Summary>
+					</Documentation>
+					<Key>
+						<PropertyRef Name="Id" />
+					</Key>
+					<Property Name="Id" Type="Guid" Nullable="false" a:GetterAccess="Private" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" a:SetterAccess="Private" />
+					<Property Name="Name" Type="String" Nullable="false" MaxLength="64" Unicode="true" FixedLength="false" />
+					<Property Name="SqlTime" Type="DateTime" Nullable="false" a:GetterAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" a:SetterAccess="Public" >
+						<Documentation>
+							<Summary>A DateTime containing the time for  this value.</Summary>
+						</Documentation>
+					</Property>
+					<NavigationProperty Name="Cell" Relationship="ScheduleModel.ScheduleTimesForeignKey" FromRole="ScheduleTimes" ToRole="ScheduleDates" a:SetterAccess="Private" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+					<Property Name="IsBold" Type="Boolean" Nullable="false" DefaultValue="False" />
+					<Property Name="LastModified" Type="DateTime" Nullable="false" a:SetterAccess="Private" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+				</EntityType>
+				<Association Name="ScheduleTimesForeignKey">
+					<End Role="ScheduleDates" Type="ScheduleModel.ScheduleCell" Multiplicity="1">
+						<OnDelete Action="Cascade"/>
+					</End>
+					<End Role="ScheduleTimes" Type="ScheduleModel.ScheduleTime" Multiplicity="*" />
+				</Association>
+			</Schema>
+		</edmx:ConceptualModels>
+		<!-- C-S mapping content -->
+		<edmx:Mappings>
+			<Mapping Space="C-S" xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS">
+				<EntityContainerMapping StorageEntityContainer="ScheduleModelStoreContainer" CdmEntityContainer="ScheduleContext">
+					<EntitySetMapping Name="CellSet">
+						<EntityTypeMapping TypeName="IsTypeOf(ScheduleModel.ScheduleCell)">
+							<MappingFragment StoreEntitySet="ScheduleDates">
+								<ScalarProperty Name="Id" ColumnName="ID" />
+								<ScalarProperty Name="EnglishDate" ColumnName="Date" />
+								<ScalarProperty Name="Title" ColumnName="Title" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="TimeSet">
+						<EntityTypeMapping TypeName="IsTypeOf(ScheduleModel.ScheduleTime)">
+							<MappingFragment StoreEntitySet="ScheduleTimes">
+								<ScalarProperty Name="LastModified" ColumnName="LastModified" />
+								<ScalarProperty Name="IsBold" ColumnName="IsBold" />
+								<ScalarProperty Name="Id" ColumnName="ID" />
+								<ScalarProperty Name="Name" ColumnName="Name" />
+								<ScalarProperty Name="SqlTime" ColumnName="Time" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<AssociationSetMapping Name="ScheduleTimesForeignKey" TypeName="ScheduleModel.ScheduleTimesForeignKey" StoreEntitySet="ScheduleTimes">
+						<EndProperty Name="ScheduleDates">
+							<ScalarProperty Name="Id" ColumnName="CellID" />
+						</EndProperty>
+						<EndProperty Name="ScheduleTimes">
+							<ScalarProperty Name="Id" ColumnName="ID" />
+						</EndProperty>
+					</AssociationSetMapping>
+				</EntityContainerMapping>
+			</Mapping>
+		</edmx:Mappings>
+	</edmx:Runtime>
+	<!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+	<edmx:Designer xmlns="http://schemas.microsoft.com/ado/2007/06/edmx">
+		<edmx:Connection>
+			<DesignerInfoPropertySet>
+				<DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+			</DesignerInfoPropertySet>
+		</edmx:Connection>
+		<edmx:Options>
+			<DesignerInfoPropertySet>
+				<DesignerProperty Name="ValidateOnBuild" Value="true" />
+			</DesignerInfoPropertySet>
+		</edmx:Options>
+		<!-- Diagram content (shape and connector positions) -->
+		<edmx:Diagrams>
+			<Diagram Name="ScheduleModel">
+				<EntityTypeShape EntityType="ScheduleModel.ScheduleCell" Width="1.5" PointX="0.75" PointY="1.125" Height="1.427958984375" IsExpanded="true" />
+				<EntityTypeShape EntityType="ScheduleModel.ScheduleTime" Width="1.5" PointX="3" PointY="0.875" Height="1.7566536458333339" IsExpanded="true" />
+				<AssociationConnector Association="ScheduleModel.ScheduleTimesForeignKey" ManuallyRouted="false">
+					<ConnectorPoint PointX="2.25" PointY="1.8389794921875" />
+					<ConnectorPoint PointX="3" PointY="1.8389794921875" />
+				</AssociationConnector>
+			</Diagram>
+		</edmx:Diagrams>
+	</edmx:Designer>
+</edmx:Edmx>
