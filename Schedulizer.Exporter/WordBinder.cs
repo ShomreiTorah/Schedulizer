@@ -15,7 +15,6 @@ using Microsoft.Office.Interop.Word.Extensions;
 using ShomreiTorah.Common;
 using ShomreiTorah.Common.Calendar;
 using ShomreiTorah.Common.Calendar.Holidays;
-using ShomreiTorah.Forms;
 
 namespace ShomreiTorah.Schedules.Export {
 	///<summary>Binds a portion of the schedule to a Word document.</summary>

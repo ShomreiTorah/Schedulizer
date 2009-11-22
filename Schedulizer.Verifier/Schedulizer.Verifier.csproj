@@ -49,7 +49,7 @@
     <Reference Include="DevExpress.XtraVerticalGrid.v9.2, Version=9.2.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="ShomreiTorah.Schedules.Standalone, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ShomreiTorah.Schedules.Standalone\bin\Debug\ShomreiTorah.Schedules.Standalone.exe</HintPath>
+      <HintPath>bin\ShomreiTorah.Schedules.Standalone.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -108,7 +108,7 @@
     <Content Include="App.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ShomreiTorah.Common\ShomreiTorah.Common.csproj">
+    <ProjectReference Include="..\..\..\Libraries\ShomreiTorah.Common\ShomreiTorah.Common.csproj">
       <Project>{1308A6E1-7787-49F6-A19C-8AF327DAF9B5}</Project>
       <Name>ShomreiTorah.Common</Name>
     </ProjectReference>

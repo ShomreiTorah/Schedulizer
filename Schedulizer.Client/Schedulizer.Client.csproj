@@ -165,13 +165,13 @@
     <Content Include="Schedulizer.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ShomreiTorah.Common\ShomreiTorah.Common.csproj">
+    <ProjectReference Include="..\..\..\Libraries\ShomreiTorah.Common\ShomreiTorah.Common.csproj">
       <Project>{1308A6E1-7787-49F6-A19C-8AF327DAF9B5}</Project>
       <Name>ShomreiTorah.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\ShomreiTorah.Controls\ShomreiTorah.Controls.csproj">
+    <ProjectReference Include="..\..\..\Libraries\ShomreiTorah.WinForms\ShomreiTorah.WinForms.csproj">
       <Project>{0B927F97-8CDD-47CB-B775-CA1E0AB2409C}</Project>
-      <Name>ShomreiTorah.Controls</Name>
+      <Name>ShomreiTorah.WinForms</Name>
     </ProjectReference>
     <ProjectReference Include="..\Schedulizer.Core\Schedulizer.Core.csproj">
       <Project>{A111D4E1-561F-405F-8FA4-6111A1D329B3}</Project>

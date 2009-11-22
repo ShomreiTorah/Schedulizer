@@ -78,15 +78,15 @@
     <None Include="Shul.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ShomreiTorah.Common\ShomreiTorah.Common.csproj">
+    <CodeAnalysisDictionary Include="..\..\..\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Libraries\ShomreiTorah.Common\ShomreiTorah.Common.csproj">
       <Project>{1308A6E1-7787-49F6-A19C-8AF327DAF9B5}</Project>
       <Name>ShomreiTorah.Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <CodeAnalysisDictionary Include="..\..\CustomDictionary.xml">
-      <Link>CustomDictionary.xml</Link>
-    </CodeAnalysisDictionary>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
