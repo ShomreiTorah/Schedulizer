@@ -84,7 +84,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			this.wordBinderGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
 			this.ribbonStatusBar = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
 			this.clientPanel = new DevExpress.XtraEditors.PanelControl();
-			this.calendar = new ShomreiTorah.Controls.HebrewCalendar();
+			this.calendar = new ShomreiTorah.WinForms.Controls.HebrewCalendar();
 			this.dockManager1 = new DevExpress.XtraBars.Docking.DockManager(this.components);
 			this.valueGridPanel = new DevExpress.XtraBars.Docking.DockPanel();
 			this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
@@ -443,7 +443,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			this.calendar.Size = new System.Drawing.Size(821, 411);
 			this.calendar.TabIndex = 0;
 			this.calendar.SelectionChanged += new System.EventHandler(this.calendar_SelectionChanged);
-			this.calendar.DateToolTip += new System.EventHandler<ShomreiTorah.Controls.CalendarToolTipEventArgs>(this.calendar_DateToolTip);
+			this.calendar.DateToolTip += new System.EventHandler<ShomreiTorah.WinForms.Controls.CalendarToolTipEventArgs>(this.calendar_DateToolTip);
 			// 
 			// dockManager1
 			// 
@@ -523,7 +523,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 		private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
 		private DevExpress.XtraBars.Ribbon.RibbonStatusBar ribbonStatusBar;
 		private DevExpress.XtraEditors.PanelControl clientPanel;
-		private ShomreiTorah.Controls.HebrewCalendar calendar;
+		private ShomreiTorah.WinForms.Controls.HebrewCalendar calendar;
 		private DevExpress.XtraBars.Docking.DockManager dockManager1;
 		private DevExpress.XtraBars.Docking.DockPanel valueGridPanel;
 		private DevExpress.XtraBars.Docking.ControlContainer dockPanel1_Container;

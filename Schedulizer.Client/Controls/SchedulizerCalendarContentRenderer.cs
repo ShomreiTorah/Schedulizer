@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ShomreiTorah.Common;
 using ShomreiTorah.Common.Calendar;
-using ShomreiTorah.Controls;
+using ShomreiTorah.WinForms.Controls;
 using System.Windows.Forms;
 using System.Globalization;
 using System.Drawing;
