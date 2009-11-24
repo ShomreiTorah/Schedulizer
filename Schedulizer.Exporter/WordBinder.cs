@@ -281,8 +281,8 @@ namespace ShomreiTorah.Schedules.Export {
 							} finally {
 								//I Only do this after creating the table to prevent
 								//Word from copying the formatting down to new rows.
-								//If the user cancelled, I colorize the weeks we did
-								//before he cancelled.
+								//If the user canceled, I colorize the weeks we did
+								//before he canceled.
 								if (שבתStyle != null) {
 									//http://stackoverflow.com/questions/1230107/bug-in-word-2007-conditionalstyle
 									//I worked around this bug by moving the selection out of the table.
