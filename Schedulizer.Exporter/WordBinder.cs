@@ -37,11 +37,12 @@ namespace ShomreiTorah.Schedules.Export {
 			cellsBindingList.ListChanged += Cells_ListChanged;
 			timesBindingList.ListChanged += Times_ListChanged;
 		}
-		class EmptyProgressReporter: IProgressReporter {
+		class EmptyProgressReporter : IProgressReporter {
 			public string Caption { get; set; }
 			public int Progress { get; set; }
 			public int Maximum { get; set; }
 			public bool WasCanceled { get { return false; } }
+			public bool CanCancel { get; set; }
 		}
 
 		void PerformOperation(Action<IProgressReporter> operation, bool cancellable) {
@@ -279,7 +280,8 @@ namespace ShomreiTorah.Schedules.Export {
 									if (ui.WasCanceled) break;
 								}
 							} finally {
-								//I Only do this after creating the table to prevent
+								ui.CanCancel = false;
+								//I only do this after creating the table to prevent
 								//Word from copying the formatting down to new rows.
 								//If the user canceled, I colorize the weeks we did
 								//before he canceled.
