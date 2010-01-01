@@ -37,13 +37,6 @@ namespace ShomreiTorah.Schedules.Export {
 			cellsBindingList.ListChanged += Cells_ListChanged;
 			timesBindingList.ListChanged += Times_ListChanged;
 		}
-		class EmptyProgressReporter : IProgressReporter {
-			public string Caption { get; set; }
-			public int Progress { get; set; }
-			public int Maximum { get; set; }
-			public bool WasCanceled { get { return false; } }
-			public bool CanCancel { get; set; }
-		}
 
 		void PerformOperation(Action<IProgressReporter> operation, bool cancellable) {
 			if (uiProvider == null)
