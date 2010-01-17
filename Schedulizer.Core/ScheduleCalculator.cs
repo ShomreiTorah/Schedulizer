@@ -297,7 +297,7 @@ namespace ShomreiTorah.Schedules {
 				if ((Date + 1).Info.Is(Holiday.פורים)) {
 					yield return new ScheduleValue("מגילה", defaultמנחה + TimeSpan.FromMinutes(95));
 					yield return new ScheduleValue("מגילה", defaultמנחה + TimeSpan.FromMinutes(95 + 90));
-					yield return new ScheduleValue("מתיבה", Time(10, 30, PM));
+					yield return new ScheduleValue("מסיבה", Time(10, 30, PM));
 				}
 				#endregion
 			} else if (Holiday.Is(Holiday.סוכות.Days[5])) {
@@ -330,7 +330,7 @@ namespace ShomreiTorah.Schedules {
 				if ((Date + 1).Info.Is(Holiday.פורים)) {				//פורים is on Tuesday, Thursday, or Friday
 					yield return new ScheduleValue("מגילה", mincha + TimeSpan.FromMinutes(75));
 					yield return new ScheduleValue("מגילה", mincha + TimeSpan.FromMinutes(75 + 90));
-					yield return new ScheduleValue("מתיבה", Time(10, 30, PM));
+					yield return new ScheduleValue("מסיבה", Time(10, 30, PM));
 				}
 			}
 
