@@ -342,7 +342,8 @@ namespace ShomreiTorah.Schedules {
 				if (DayOfWeek == DayOfWeek.Sunday || Date < new DateTime(2009, 11, 2))
 					yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
 				else {
-					yield return new ScheduleValue("עמוד יומי", Time(8, 40, PM));
+					if (HolidayCategory != HolidayCategory.חולהמועד)
+						yield return new ScheduleValue("עמוד יומי", Time(8, 40, PM));
 					//No מעריב...  Waaah...
 					//yield return new ScheduleValue("מעריב", Time(9, 10, PM));
 					yield return new ScheduleValue(dafYomiString, Time(9, 30, PM));
