@@ -134,7 +134,7 @@ namespace ShomreiTorah.Schedules {
 
 			string dafYomiString = "דף יומי";//I wanted to do this, but it doesn't fit in Word.  "דף יומי – " + Date.Info.DafYomiString;
 			דףיומיType dafYomi;
-			if (Isיוםטוב)
+			if (Isיוםטוב || (Isשבת && HolidayCategory == HolidayCategory.חולהמועד))
 				dafYomi = דףיומיType.Beforeמנחה;
 			else if (Isשבת) {
 				if (Date.EnglishDate.Month == 7 || Date.EnglishDate.Month == 8)
