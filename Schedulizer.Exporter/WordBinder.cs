@@ -147,7 +147,7 @@ namespace ShomreiTorah.Schedules.Export {
 
 					for (HebrewDate date = StartDate; date <= endDate; date++) {
 						ui.Progress = (date - StartDate).Days;
-						ui.Caption = String.Format(CultureInfo.CurrentUICulture, "Updating {0:D}", date.EnglishDate);
+						ui.Caption = String.Format(CultureInfo.CurrentCulture, "Updating {0:D}", date.EnglishDate);
 						var cell = Context.GetCell(date);
 						UpdateTitle(cell);
 						UpdateTimes(cell);
@@ -263,7 +263,7 @@ namespace ShomreiTorah.Schedules.Export {
 									for (int c = 0; c < 7; c++) {
 										var date = StartDate.AddDays(w * 7 + c);
 										ui.Progress++;
-										ui.Caption = String.Format(CultureInfo.CurrentUICulture, "Creating {0:D}", date.EnglishDate);
+										ui.Caption = String.Format(CultureInfo.CurrentCulture, "Creating {0:D}", date.EnglishDate);
 
 										ResetCell(row.Cells[c + 1], date);	 //Indexer is one-based.
 										//Don't stop in this loop as it would

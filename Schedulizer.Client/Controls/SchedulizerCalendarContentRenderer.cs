@@ -12,7 +12,7 @@ using ShomreiTorah.Schedules.WinClient.Properties;
 
 namespace ShomreiTorah.Schedules.WinClient.Controls {
 	class SchedulizerCalendarContentRenderer : BaseContentRenderer {
-		static CultureInfo Culture { get { return CultureInfo.CurrentUICulture; } }
+		static CultureInfo Culture { get { return CultureInfo.CurrentCulture; } }
 		public SchedulizerCalendarContentRenderer(ICalendarPainter painter, ScheduleContext context)
 			: base(painter) {
 			Context = context;

@@ -80,7 +80,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 					dialog.FadeOut();
 				});
 
-				if (waiter.WaitOne(TimeSpan.FromSeconds(.5)))
+				if (waiter.WaitOne(TimeSpan.FromSeconds(.5), false))
 					return;	//If it finishes very quickly, don't show progress.  Otherwise, we get an annoying focus bounce whenever we switch cells
 
 				dialog.FadeIn();
@@ -355,7 +355,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 		}
 
 		private void wbWeekCountItem_EditValueChanged(object sender, EventArgs e) {
-			RibbonBinder.WeekCount = Convert.ToInt32(wbWeekCountItem.EditValue, CultureInfo.CurrentUICulture);
+			RibbonBinder.WeekCount = Convert.ToInt32(wbWeekCountItem.EditValue, CultureInfo.CurrentCulture);
 		}
 		private void wbActivate_ItemClick(object sender, ItemClickEventArgs e) {
 			RibbonBinder.Document.Activate();
@@ -423,7 +423,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 					if (ui.WasCanceled) return;
 
 					if (date.Parsha != null) {
-						ui.Caption = "Updating announcements for " + date.EnglishDate.ToString("MMMM d, yyyy", CultureInfo.CurrentUICulture);
+						ui.Caption = "Updating announcements for " + date.EnglishDate.ToString("MMMM d, yyyy", CultureInfo.CurrentCulture);
 						ui.Progress = week;
 
 						exporter.UpdateSlide(date);
