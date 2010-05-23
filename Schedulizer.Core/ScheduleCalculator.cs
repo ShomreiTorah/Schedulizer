@@ -172,8 +172,10 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("שחרית", Time(6, 30, AM));
 					yield return new ScheduleValue("קידוש", Time(10, 00, AM));
 					yield return new ScheduleValue("הקפות", Time(10, 20, AM));
-				} else if (Holiday.Is(Holiday.שבועות.Days.First()))
+				} else if (Holiday.Is(Holiday.שבועות.Days.First())) {
+					yield return new ScheduleValue("Sunrise", Zmanim.Sunrise);
 					yield return new ScheduleValue("שחרית", Time(4, 40, AM));
+				}
 
 				if ((Date + 1).Info.Is(Holiday.פסח.Days.First()) && Isשבת)
 					yield return new ScheduleValue("שחרית", Time(6, 45, AM), true);
@@ -342,7 +344,8 @@ namespace ShomreiTorah.Schedules {
 				if (DayOfWeek == DayOfWeek.Sunday || Date < new DateTime(2009, 11, 2))
 					yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
 				else {
-					if (HolidayCategory != HolidayCategory.חולהמועד)
+					if (HolidayCategory != HolidayCategory.חולהמועד && 
+						(Date < Holiday.All["י\"ז בתמוז"].Date || Date.EnglishDate.Month > 8))	//No עמוד יומי during the summer
 						yield return new ScheduleValue("עמוד יומי", Time(8, 40, PM));
 					//No מעריב...  Waaah...
 					//yield return new ScheduleValue("מעריב", Time(9, 10, PM));
