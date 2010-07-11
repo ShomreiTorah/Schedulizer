@@ -44,6 +44,10 @@ namespace ShomreiTorah.Schedules {
 				}
 			}
 
+			if ((DayOfWeek == DayOfWeek.Wednesday && (Date + 1).Info.Is(HolidayCategory.דאריתא) && (Date + 2).Info.Is(HolidayCategory.דאריתא))
+			 || (DayOfWeek == DayOfWeek.Thursday && !(Date).Info.Is(HolidayCategory.דאריתא) && (Date + 1).Info.Is(HolidayCategory.דאריתא)))
+				retVal.AppendLine("ערוב תבשילין");
+
 			return retVal.ToString().Trim();
 		}
 
@@ -120,7 +124,7 @@ namespace ShomreiTorah.Schedules {
 			if ((Date + 1).Info.Is(Holiday.שבועות.Days[0]))
 				return defaultמנחה;
 
-			if (defaultמנחה > Time(7, 00, PM))
+			if (defaultמנחה > Time(7, 20, PM))
 				return Time(7, 00, PM);
 			else
 				return defaultמנחה;
@@ -137,14 +141,12 @@ namespace ShomreiTorah.Schedules {
 			if (Isיוםטוב || (Isשבת && HolidayCategory == HolidayCategory.חולהמועד))
 				dafYomi = דףיומיType.Beforeמנחה;
 			else if (Isשבת) {
-				if (Date.EnglishDate.Month == 7 || Date.EnglishDate.Month == 8)
-					dafYomi = דףיומיType.None;
-				else if (Date.EnglishDate.IsDaylightSavingTime())
+				if (Date.EnglishDate.IsDaylightSavingTime())
 					dafYomi = דףיומיType.Beforeשיעור;
 				else
 					dafYomi = דףיומיType.Beforeשחרית;
 
-			} else if (HolidayCategory == HolidayCategory.תענית)
+			} else if (HolidayCategory == HolidayCategory.תענית || (Date + 1).Info.Is(Holiday.תשעה٠באב))
 				dafYomi = דףיומיType.None;
 			else if ((Date + 1).Info.Isשבתיוםטוב)
 				dafYomi = דףיומיType.None;
@@ -241,7 +243,6 @@ namespace ShomreiTorah.Schedules {
 
 			if (Isשבת || Isיוםטוב) {
 				#region שבת/יום טוב Afternoon
-				//TODO: שבת/יום טוב Afternoon
 				var defaultמנחה = GetDefaultערב٠שבת٠מנחה(Date - 1) - TimeSpan.FromMinutes(10);
 
 				#region מנחה
@@ -334,6 +335,18 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("מגילה", mincha + TimeSpan.FromMinutes(75 + 90));
 					yield return new ScheduleValue("מסיבה", Time(10, 30, PM));
 				}
+			} else if ((Date + 1).Info.Is(Holiday.תשעה٠באב)) {
+				//ערב תשעה בעב
+				yield return new ScheduleValue("מנחה", Zmanim.Sunset.RoundUp(TimeSpan.FromMinutes(15)) - TimeSpan.FromMinutes(90));
+				yield return new ScheduleValue("מעריב", Zmanim.Sunset.RoundUp() + TimeSpan.FromMinutes(30));
+
+			} else if (Holiday.Is(Holiday.תשעה٠באב)) {
+				yield return new ScheduleValue("מנחה", Time(1, 40, PM));
+				yield return new ScheduleValue("מעריב", Zmanim.Sunset.RoundUp() + TimeSpan.FromMinutes(30));
+			} else if (HolidayName == "י\"ז בתמוז") {
+				var mincha = (Zmanim.Sunset - TimeSpan.FromMinutes(30)).RoundDown();		//TODO: Down or up?
+				yield return new ScheduleValue("מנחה", mincha);
+				yield return new ScheduleValue("מעריב", mincha + TimeSpan.FromHours(1));
 			}
 
 			if (hasLateCandleLighting) {
@@ -344,7 +357,7 @@ namespace ShomreiTorah.Schedules {
 				if (DayOfWeek == DayOfWeek.Sunday || Date < new DateTime(2009, 11, 2))
 					yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
 				else {
-					if (HolidayCategory != HolidayCategory.חולהמועד && 
+					if (HolidayCategory != HolidayCategory.חולהמועד &&
 						(Date < Holiday.All["י\"ז בתמוז"].Date || Date.EnglishDate.Month > 8))	//No עמוד יומי during the summer
 						yield return new ScheduleValue("עמוד יומי", Time(8, 40, PM));
 					//No מעריב...  Waaah...
