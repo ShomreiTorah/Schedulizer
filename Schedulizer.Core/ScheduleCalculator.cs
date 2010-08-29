@@ -102,7 +102,7 @@ namespace ShomreiTorah.Schedules {
 			if (Date.HebrewMonth == HebrewMonth.תשרי) {
 				if (Date.HebrewDay == 9)
 					return TimeSpan.FromMinutes(15);
-				else if (Date.HebrewDay < 8)
+				else if (Date.HebrewDay <= 8)
 					return TimeSpan.FromMinutes(35);
 			} else if (Date.HebrewMonth == HebrewMonth.אלול) {
 				if ((Date + 1).Info.Is(Holiday.ראש٠השנה))
