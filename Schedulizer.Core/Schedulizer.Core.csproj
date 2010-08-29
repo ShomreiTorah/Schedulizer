@@ -96,6 +96,7 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>ScheduleModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="Properties\DataSources\ScheduleContext.datasource" />
     <None Include="Shul.pfx" />
   </ItemGroup>
   <ItemGroup>
