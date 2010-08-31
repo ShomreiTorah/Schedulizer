@@ -358,8 +358,15 @@ namespace ShomreiTorah.Schedules.Export {
 			}
 			//If I don't do this here, the style is lost when the cell is reset.
 			range.ApplyStyle("Schedule Values");
+
+			var weekStart = scheduleCell.Date.Last(DayOfWeek.Sunday);
+			var weekCells = Enumerable.Range(0, 7).Select(i => weekStart + i)
+												  .Select(d => scheduleCell.Context.GetCell(d));
+			var maxLines = weekCells.Max(c => c.LinesUsed());
+			var ourLines = scheduleCell.LinesUsed();
+
 			//Where it'll fit, I put in דף יומי
-			if (printedPairs.Count() < 6) {		//I could optimize and not call Count
+			if (ourLines < Math.Max(maxLines, 7)) {
 				range.Offset(0).InsertParagraph();
 				range.End++;
 				range.AppendText(scheduleCell.Date.Info.DafYomiString, "Daf");
@@ -370,6 +377,12 @@ namespace ShomreiTorah.Schedules.Export {
 		}
 	}
 	static class WordExtensions {
+		public static int LinesUsed(this ScheduleCell day) {
+			//Even an empty title will still use one line
+			return Math.Max(1, day.Title.Trim().Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length)
+				 + day.Times.Select(t => t.Name).Distinct().Count();
+		}
+
 		public static void AppendText(this Range range, string text, string styleName) {
 			range.InsertAfter(text);
 			range.Document.Range(range.End - text.Length, range.End).ApplyStyle(styleName);
