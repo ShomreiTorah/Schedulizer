@@ -309,8 +309,11 @@ namespace ShomreiTorah.Schedules {
 			} else if ((Date + 1).Info.Isשבתיוםטוב) {
 				if ((Date + 1).Info.Is(Holiday.יום٠כיפור)) {
 					yield return new ScheduleValue("מנחה", Time(3, 00, PM));
-					yield return new ScheduleValue("תפילה זכה", Time(6, 15, PM));
-					yield return new ScheduleValue("כל נדרי", Time(6, 30, PM));
+
+					var kolNidrei = GetDefaultערב٠שבת٠מנחה(Date) - TimeSpan.FromMinutes(5);
+
+					yield return new ScheduleValue("תפילה זכה", kolNidrei - TimeSpan.FromMinutes(15));
+					yield return new ScheduleValue("כל נדרי", kolNidrei);
 				} else {
 					if ((Date + 1).Info.Is(Holiday.חנוכה))
 						yield return new ScheduleValue("מנחה", Time(3, 00, PM));
