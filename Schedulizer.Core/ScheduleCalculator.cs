@@ -141,7 +141,9 @@ namespace ShomreiTorah.Schedules {
 			if (Isיוםטוב || (Isשבת && HolidayCategory == HolidayCategory.חולהמועד))
 				dafYomi = דףיומיType.Beforeמנחה;
 			else if (Isשבת) {
-				if (Date.EnglishDate.IsDaylightSavingTime())
+				if ((Date - 1).Info.Is(Holiday.סוכות.Days.Last()))
+					dafYomi = דףיומיType.Beforeמנחה;			//On שבת אסרו חג סוכות, there is no שיעור, since people are likely to go away
+				else if (Date.EnglishDate.IsDaylightSavingTime())
 					dafYomi = דףיומיType.Beforeשיעור;
 				else
 					dafYomi = דףיומיType.Beforeשחרית;
@@ -150,7 +152,7 @@ namespace ShomreiTorah.Schedules {
 				dafYomi = דףיומיType.None;
 			else if ((Date + 1).Info.Isשבתיוםטוב)
 				dafYomi = דףיומיType.None;
-			else if (Holiday.Is(Holiday.סוכות.Days[5]))	//No דף יומי on משנה תורה
+			else if (Holiday.Is(Holiday.סוכות.Days[5]))	//Special דף יומי on משנה תורה; handled elsewhere
 				dafYomi = דףיומיType.None;
 			else
 				dafYomi = דףיומיType.WeekNight;
@@ -303,7 +305,9 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("מסיבה", Time(10, 30, PM));
 				}
 				#endregion
-			} else if (Holiday.Is(Holiday.סוכות.Days[5])) {
+				//TODO: שמחת בית השואבה
+			} else if (Holiday.Is(Holiday.סוכות.Days[5])) {	
+				yield return new ScheduleValue(dafYomiString, Time(8, 00, PM));
 				yield return new ScheduleValue("מעריב", Time(9, 00, PM));
 				yield return new ScheduleValue("משנה תורה", Time(9, 15, PM));
 			} else if ((Date + 1).Info.Isשבתיוםטוב) {
@@ -357,16 +361,14 @@ namespace ShomreiTorah.Schedules {
 			}
 
 			if (dafYomi == דףיומיType.WeekNight) {
-				if (DayOfWeek == DayOfWeek.Sunday || Date < new DateTime(2009, 11, 2))
-					yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
-				else {
-					if (HolidayCategory != HolidayCategory.חולהמועד &&
-						(Date < Holiday.All["י\"ז בתמוז"].Date || Date.EnglishDate.Month > 8))	//No עמוד יומי during the summer
-						yield return new ScheduleValue("עמוד יומי", Time(8, 40, PM));
-					//No מעריב...  Waaah...
-					//yield return new ScheduleValue("מעריב", Time(9, 10, PM));
-					yield return new ScheduleValue(dafYomiString, Time(9, 30, PM));
-				}
+				//if (HolidayCategory != HolidayCategory.חולהמועד &&
+				//    (Date < Holiday.All["י\"ז בתמוז"].Date || Date.EnglishDate.Month > 8))	//No עמוד יומי during the summer
+				//    yield return new ScheduleValue("עמוד יומי", Time(8, 40, PM));
+				//No more עמוד יומי (at least for now)
+
+				if (Date >= new DateTime(2010, 10, 4))
+					yield return new ScheduleValue("מעריב", Time(9, 00, PM));
+				yield return new ScheduleValue(dafYomiString, Time(9, 15, PM));
 			}
 
 			//TODO: תענית בכורות / ערב פסח
