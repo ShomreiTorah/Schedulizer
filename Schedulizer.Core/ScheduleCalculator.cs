@@ -123,8 +123,9 @@ namespace ShomreiTorah.Schedules {
 		protected virtual TimeSpan Getערב٠שבת٠מנחה(TimeSpan defaultמנחה) {
 			if ((Date + 1).Info.Is(Holiday.שבועות.Days[0]))
 				return defaultמנחה;
-
-			if (defaultמנחה > Time(7, 20, PM))
+			else if (Date.Info.Is(HolidayCategory.תענית))
+				return defaultמנחה - TimeSpan.FromMinutes(15);
+			else if (defaultמנחה > Time(7, 20, PM))
 				return Time(7, 00, PM);
 			else
 				return defaultמנחה;
@@ -306,7 +307,7 @@ namespace ShomreiTorah.Schedules {
 				}
 				#endregion
 				//TODO: שמחת בית השואבה
-			} else if (Holiday.Is(Holiday.סוכות.Days[5])) {	
+			} else if (Holiday.Is(Holiday.סוכות.Days[5])) {
 				yield return new ScheduleValue(dafYomiString, Time(8, 00, PM));
 				yield return new ScheduleValue("מעריב", Time(9, 00, PM));
 				yield return new ScheduleValue("משנה תורה", Time(9, 15, PM));
