@@ -367,9 +367,13 @@ namespace ShomreiTorah.Schedules {
 				//    yield return new ScheduleValue("עמוד יומי", Time(8, 40, PM));
 				//No more עמוד יומי (at least for now)
 
-				if (Date >= new DateTime(2010, 10, 4))
-					yield return new ScheduleValue("מעריב", Time(9, 00, PM));
-				yield return new ScheduleValue(dafYomiString, Time(9, 15, PM));
+				if (DayOfWeek == DayOfWeek.Sunday && Date > new DateTime(2010, 12, 1))
+					yield return new ScheduleValue(dafYomiString, Time(9, 30, PM));
+				else {
+					if (Date >= new DateTime(2010, 10, 4))
+						yield return new ScheduleValue("מעריב", Time(9, 00, PM));
+					yield return new ScheduleValue(dafYomiString, Time(9, 15, PM));
+				}
 			}
 
 			//TODO: תענית בכורות / ערב פסח
