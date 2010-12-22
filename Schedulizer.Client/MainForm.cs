@@ -379,9 +379,15 @@ namespace ShomreiTorah.Schedules.WinClient {
 
 					ui.Caption = "Uploading PDF...";
 					FtpClient.Default.UploadFile(new Uri(Config.ReadAttribute("Schedules", "PdfUri"), UriKind.Relative), pdfPath, ui);
-					FtpClient.Default.UploadFile(new Uri(
-						String.Format(CultureInfo.InvariantCulture, Config.ReadAttribute("Schedules", "PdfArchiveUri"), RibbonBinder.StartDate.EnglishDate.AddDays(14)),
-					UriKind.Relative), pdfPath, ui);
+
+					var archivePath = String.Format(
+						CultureInfo.InvariantCulture,
+						Config.ReadAttribute("Schedules", "PdfArchiveUri"),
+						RibbonBinder.StartDate.EnglishDate.AddDays(14)
+					);
+					//Won't throw if the directory already exists
+					FtpClient.Default.CreateDirectory(new Uri(Path.GetDirectoryName(archivePath), UriKind.Relative));
+					FtpClient.Default.UploadFile(new Uri(archivePath, UriKind.Relative), pdfPath, ui);
 				} catch (Exception ex) {
 					BeginInvoke(new Action(delegate {
 						XtraMessageBox.Show(ex.ToString(), "Shomrei Torah Schedulizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
