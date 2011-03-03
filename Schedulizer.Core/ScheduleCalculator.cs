@@ -202,9 +202,11 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("שחרית", Time(6, 30, AM));
 				}
 			} else if ((Holiday.Is(Holiday.פורים))) {
-				yield return new ScheduleValue("שחרית", Time(7, 00, AM));
-				yield return new ScheduleValue("מגילה", Time(7, 45, AM));
-				yield return new ScheduleValue("מגילה", Time(9, 00, AM));
+				TimeSpan shacharis = DayOfWeek == DayOfWeek.Sunday ? Time(7, 30, AM) : Time(7, 00, AM);
+
+				yield return new ScheduleValue("שחרית", shacharis);
+				yield return new ScheduleValue("מגילה", shacharis + TimeSpan.FromMinutes(45));
+				yield return new ScheduleValue("מגילה", shacharis + TimeSpan.FromHours(2));
 			} else if (Holiday.Is(Holiday.חנוכה)) {
 				yield return new ScheduleValue("שחרית", Time(6, 30, AM));
 			} else if ((Date - 1) == GetSelichosStart(Date.HebrewYear)) {
@@ -303,7 +305,7 @@ namespace ShomreiTorah.Schedules {
 				if ((Date + 1).Info.Is(Holiday.פורים)) {
 					yield return new ScheduleValue("מגילה", defaultמנחה + TimeSpan.FromMinutes(95));
 					yield return new ScheduleValue("מגילה", defaultמנחה + TimeSpan.FromMinutes(95 + 90));
-					yield return new ScheduleValue("מסיבה", Time(10, 30, PM));
+					yield return new ScheduleValue("מסיבה", Time(10, 15, PM));
 				}
 				#endregion
 				//TODO: שמחת בית השואבה
