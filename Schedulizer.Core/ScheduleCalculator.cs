@@ -121,7 +121,7 @@ namespace ShomreiTorah.Schedules {
 		}
 
 		protected virtual TimeSpan Getערב٠שבת٠מנחה(TimeSpan defaultמנחה) {
-			if ((Date + 1).Info.Is(Holiday.שבועות.Days[0]))
+			if ((Date + 1).Info.Is(HolidayCategory.דאריתא) && !Date.Info.Is(Holiday.פסח[6]))
 				return defaultמנחה;
 			else if (Date.Info.Is(HolidayCategory.תענית))
 				return defaultמנחה - TimeSpan.FromMinutes(15);
