@@ -39,7 +39,7 @@ namespace ShomreiTorah.Schedules {
 					if (Date.HebrewDay == 29)
 						retVal.Append("מחר חודש ").AppendLine((Date + 1).Info.ראשחודשMonth);
 
-					else if (Date.HebrewDay > 23)
+					else if (Date.HebrewDay >= 23)
 						retVal.Append("מברכים ").AppendLine((Date + 15).HebrewMonthName);
 				}
 			}
@@ -120,14 +120,16 @@ namespace ShomreiTorah.Schedules {
 			return (date.GetZmanim().Sunset - TimeSpan.FromMinutes(18)).RoundDown() + TimeSpan.FromMinutes(5);	//Always add, even if it's already a multiple of 5.
 		}
 
-		protected virtual TimeSpan Getערב٠שבת٠מנחה(TimeSpan defaultמנחה) {
+		protected virtual TimeSpan Getערב٠שבת٠מנחה(TimeSpan defaultמנחה, out bool isEarly) {
+			isEarly = false;
 			if ((Date + 1).Info.Is(HolidayCategory.דאריתא) && !Date.Info.Is(Holiday.פסח[6]))
 				return defaultמנחה;
 			else if (Date.Info.Is(HolidayCategory.תענית))
 				return defaultמנחה - TimeSpan.FromMinutes(15);
-			else if (defaultמנחה > Time(7, 20, PM))
+			else if (defaultמנחה > Time(7, 20, PM)) {
+				isEarly = true;
 				return Time(7, 00, PM);
-			else
+			} else
 				return defaultמנחה;
 		}
 		#endregion
@@ -243,8 +245,22 @@ namespace ShomreiTorah.Schedules {
 			  && Date.DayOfWeek != DayOfWeek.Friday
 			  && (Date + 1).Info.Isשבתיוםטוב;
 
-			if (!hasLateCandleLighting && (Date + 1).Info.Isשבתיוםטוב)
-				yield return new ScheduleValue("Candle Lighting", Zmanim.Sunset - TimeSpan.FromMinutes(18));
+			bool isEarlyמנחה;
+			var normalמנחה = Getערב٠שבת٠מנחה(GetDefaultערב٠שבת٠מנחה(Date), out isEarlyמנחה);
+
+			if (!hasLateCandleLighting && (Date + 1).Info.Isשבתיוםטוב) {
+				//When we have early מנחה, we list a separate
+				//candle lighting for people who choose early 
+				//שבת.  However, if the two candle lightings 
+				//are too close, only show one.
+				var hasTwoCandleLightings = isEarlyמנחה && (Zmanim.Sunset - TimeSpan.FromMinutes(18)) > Time(7, 32, PM);
+
+				var candlesName = hasTwoCandleLightings ? "Candles" : "Candle Lighting";
+
+				yield return new ScheduleValue(candlesName, Zmanim.Sunset - TimeSpan.FromMinutes(18));
+				if (hasTwoCandleLightings)
+					yield return new ScheduleValue(candlesName, Time(7, 30, PM));
+			}
 
 			if (Isשבת || Isיוםטוב) {
 				#region שבת/יום טוב Afternoon
@@ -324,8 +340,8 @@ namespace ShomreiTorah.Schedules {
 				} else {
 					if ((Date + 1).Info.Is(Holiday.חנוכה))
 						yield return new ScheduleValue("מנחה", Time(3, 00, PM));
-					//ערב שבת חנוכה has two מנחהs
-					yield return new ScheduleValue("מנחה", Getערב٠שבת٠מנחה(GetDefaultערב٠שבת٠מנחה(Date)));
+					//no else; ערב שבת חנוכה has two מנחהs
+					yield return new ScheduleValue("מנחה", normalמנחה);
 				}
 			} else if (Holiday.Is(Holiday.פורים)) {//And not Friday
 				yield return new ScheduleValue("מנחה", Time(3, 00, PM));
