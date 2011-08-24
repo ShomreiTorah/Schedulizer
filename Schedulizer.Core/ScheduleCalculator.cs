@@ -388,7 +388,7 @@ namespace ShomreiTorah.Schedules {
 				if (DayOfWeek == DayOfWeek.Sunday && Date > new DateTime(2010, 12, 1))
 					yield return new ScheduleValue(dafYomiString, Time(9, 30, PM));
 
-				else if (Date >= new DateTime(2011, 05, 13)) {
+				else if (Date >= new DateTime(2011, 05, 13) && Date <= new DateTime(2011, 09, 04)) {
 					yield return new ScheduleValue("מעריב", Time(10, 00, PM));
 					yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
 
@@ -406,7 +406,6 @@ namespace ShomreiTorah.Schedules {
 				yield return new ScheduleValue("Sunset", Zmanim.Sunset);
 			if (HolidayCategory == HolidayCategory.תענית)
 				yield return new ScheduleValue("Fast Ends", Zmanim.Sunset + TimeSpan.FromMinutes(45));
-
 
 			yield break;
 		}
