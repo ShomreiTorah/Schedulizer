@@ -15,16 +15,6 @@ using ShomreiTorah.Common.Calendar.Holidays;
 
 namespace ShomreiTorah.Schedules {
 	public partial class ScheduleContext {
-		//If the property is set before it is first read, DB.Default will never be called
-		[ThreadStatic]
-		static ScheduleContext defaultInstance;
-
-		///<summary>Gets or sets the default ScheduleContext instance.</summary>
-		public static ScheduleContext Default {
-			get { return defaultInstance ?? (defaultInstance = new ScheduleContext(DB.Default)); }
-			set { defaultInstance = value; }
-		}
-
 		readonly bool shouldCloseConnection;
 		CellDictionary loadedCells;
 

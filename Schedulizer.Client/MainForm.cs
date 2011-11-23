@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using DevExpress.XtraBars;
@@ -18,14 +17,13 @@ using Microsoft.Office.Interop.PowerPoint.Extensions;
 using Microsoft.Office.Interop.Word.Extensions;
 using ShomreiTorah.Common;
 using ShomreiTorah.Common.Calendar;
-using ShomreiTorah.WinForms.Controls;
-using ShomreiTorah.WinForms.Forms;
 using ShomreiTorah.Schedules.Export;
 using ShomreiTorah.Schedules.WinClient.Properties;
+using ShomreiTorah.WinForms.Controls;
+using ShomreiTorah.WinForms.Forms;
 using MsoBool = Microsoft.Office.Core.MsoTriState;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using Word = Microsoft.Office.Interop.Word;
-using System.Reflection;
 
 namespace ShomreiTorah.Schedules.WinClient {
 	partial class MainForm : RibbonForm, IExportUIProvider {
@@ -40,7 +38,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 
 			PerformOperation(ui => {
 				ui.Caption = "Connecting to SQL Server...";
-				context = ScheduleContext.Default;
+				context = new ScheduleContext(DB.Default);
 				ui.Caption = "Loading data...";
 				context.LoadCells(calendar.MonthStart.Last(DayOfWeek.Sunday), calendar.MonthStart.Last(DayOfWeek.Sunday) + 7 * 6);
 			}, false);
