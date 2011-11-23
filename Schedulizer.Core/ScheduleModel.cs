@@ -1,37 +1,28 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Collections.ObjectModel;
 using System.Data.EntityClient;
 using System.Data.Mapping;
 using System.Data.Metadata.Edm;
-using System.Data.Objects;
-using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using ShomreiTorah.Common;
 using ShomreiTorah.Common.Calendar;
 using ShomreiTorah.Common.Calendar.Holidays;
-using ShomreiTorah.Common.Calendar.Zmanim;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace ShomreiTorah.Schedules {
 	public partial class ScheduleContext {
-		static class DefaultContainer {
-			[SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "Prevent beforefieldinit")]
-			static DefaultContainer() { }
-			public static readonly ScheduleContext Instance = new ScheduleContext(DB.Default);
-		}
 		//If the property is set before it is first read, DB.Default will never be called
-		static ScheduleContext defaultOverride;
+		[ThreadStatic]
+		static ScheduleContext defaultInstance;
 
 		///<summary>Gets or sets the default ScheduleContext instance.</summary>
 		public static ScheduleContext Default {
-			get { return defaultOverride ?? DefaultContainer.Instance; }
-			set { defaultOverride = value; }
+			get { return defaultInstance ?? (defaultInstance = new ScheduleContext(DB.Default)); }
+			set { defaultInstance = value; }
 		}
 
 		readonly bool shouldCloseConnection;
