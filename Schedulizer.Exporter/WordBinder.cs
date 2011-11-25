@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -7,7 +6,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Xml.Linq;
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.Word;
@@ -180,7 +178,6 @@ namespace ShomreiTorah.Schedules.Export {
 				dirtyCells.Remove(cell);	//If the cell had a bookmark, this was done by UpdateTimes
 		}
 
-		public static WordBinder CreateDocument(DateTime startDate, int weeks, IExportUIProvider ui) { return CreateDocument(ScheduleContext.Default, startDate, weeks, ui); }
 		public static WordBinder CreateDocument(ScheduleContext context, DateTime startDate, int weeks, IExportUIProvider ui) {
 			if (context == null) throw new ArgumentNullException("context");
 			if (weeks <= 0) throw new ArgumentOutOfRangeException("weeks");

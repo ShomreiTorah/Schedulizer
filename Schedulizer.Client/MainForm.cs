@@ -212,7 +212,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 
 		private void exportWord_ItemClick(object sender, ItemClickEventArgs e) {
 			HandleWord(true);	//If I don't call this now, I'll end up with two binders for the new document.
-			var binder = WordBinder.CreateDocument(calendar.MonthStart, 5, this);	//TODO: Error handling
+			var binder = WordBinder.CreateDocument(context, calendar.MonthStart, 5, this);	//TODO: Error handling
 			AddWordBinder(binder);
 			RibbonBinder = binder;
 
