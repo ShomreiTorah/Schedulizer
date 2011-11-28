@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using ShomreiTorah.Common;
 using ShomreiTorah.Common.Calendar;
 using ShomreiTorah.Common.Calendar.Holidays;
 using ShomreiTorah.Common.Calendar.Zmanim;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ShomreiTorah.Schedules {
 	public class ScheduleCalculator {
@@ -210,7 +210,8 @@ namespace ShomreiTorah.Schedules {
 				yield return new ScheduleValue("מגילה", shacharis + TimeSpan.FromMinutes(45));
 				yield return new ScheduleValue("מגילה", shacharis + TimeSpan.FromHours(2));
 			} else if (Holiday.Is(Holiday.חנוכה)) {
-				yield return new ScheduleValue("שחרית", Time(6, 30, AM));
+				if (DayOfWeek != DayOfWeek.Sunday)
+					yield return new ScheduleValue("שחרית", Time(6, 30, AM));
 			} else if ((Date - 1) == GetSelichosStart(Date.HebrewYear)) {
 				yield return new ScheduleValue("סליחות", Time(1, 00, AM), true);
 			} else if (DayOfWeek != DayOfWeek.Sunday) {
@@ -250,8 +251,8 @@ namespace ShomreiTorah.Schedules {
 
 			if (!hasLateCandleLighting && (Date + 1).Info.Isשבתיוםטוב) {
 				//When we have early מנחה, we list a separate
-				//candle lighting for people who choose early 
-				//שבת.  However, if the two candle lightings 
+				//candle lighting for people who choose early
+				//שבת.  However, if the two candle lightings
 				//are too close, only show one.
 				var hasTwoCandleLightings = isEarlyמנחה && (Zmanim.Sunset - TimeSpan.FromMinutes(18)) > Time(7, 32, PM);
 
@@ -342,6 +343,13 @@ namespace ShomreiTorah.Schedules {
 						yield return new ScheduleValue("מנחה", Time(3, 00, PM));
 					//no else; ערב שבת חנוכה has two מנחהs
 					yield return new ScheduleValue("מנחה", normalמנחה);
+
+					if (!(Date + 1).Info.Is(Holiday.חנוכה)) {
+						if (Zmanim.Sunset < Time(5, 15, PM))
+							yield return new ScheduleValue("חומש שיעור", Time(8, 00, PM));
+						else if (Zmanim.Sunset < Time(5, 40, PM))
+							yield return new ScheduleValue("חומש שיעור", Time(8, 30, PM), true);
+					}
 				}
 			} else if (Holiday.Is(Holiday.פורים)) {//And not Friday
 				yield return new ScheduleValue("מנחה", Time(3, 00, PM));
@@ -386,7 +394,7 @@ namespace ShomreiTorah.Schedules {
 				//No more עמוד יומי (at least for now)
 
 				if (DayOfWeek == DayOfWeek.Sunday && Date > new DateTime(2010, 12, 1))
-					yield return new ScheduleValue(dafYomiString, Time(9, 30, PM));
+					yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
 
 				else if (Date >= new DateTime(2011, 05, 13) && Date <= new DateTime(2011, 09, 04)) {
 					yield return new ScheduleValue("מעריב", Time(10, 00, PM));
