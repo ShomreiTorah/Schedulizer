@@ -28,6 +28,7 @@ using Word = Microsoft.Office.Interop.Word;
 namespace ShomreiTorah.Schedules.WinClient {
 	partial class MainForm : RibbonForm, IExportUIProvider {
 		ScheduleContext context;
+		CellLoader loader;
 
 		public MainForm() {
 			InitializeComponent();
@@ -36,54 +37,42 @@ namespace ShomreiTorah.Schedules.WinClient {
 		protected override void OnShown(EventArgs e) {
 			base.OnShown(e);
 
-			PerformOperation(ui => {
+			Waiter.ExecAsync(ui => {
 				ui.Caption = "Connecting to SQL Server...";
 				context = new ScheduleContext(DB.Default);
+				loader = new CellLoader(context);
 				ui.Caption = "Loading data...";
 				context.LoadCells(calendar.MonthStart.Last(DayOfWeek.Sunday), calendar.MonthStart.Last(DayOfWeek.Sunday) + 7 * 6);
-			}, false);
-			calendar.ContentRenderer = new Controls.SchedulizerCalendarContentRenderer(calendar.CalendarPainter, context);
-			calendar.Invalidate();
 
-			UpdateCellPanel();
+				BeginInvoke(new Action(delegate {
+					calendar.ContentRenderer = new Controls.SchedulizerCalendarContentRenderer(calendar.CalendarPainter, loader);
+					calendar.Invalidate();
 
-			if (IsWordRunning) {
-				HandleWord();
-			} else {
-				wordBinderMenu.BeforePopup += wordBinderMenu_BeforePopup;
-				//TODO: Timer?
+					UpdateCellPanel();
+
+					if (IsWordRunning) {
+						HandleWord();
+					} else {
+						wordBinderMenu.BeforePopup += wordBinderMenu_BeforePopup;
+						//TODO: Timer?
+					}
+				}));
+			}, "Loading", false);
+		}
+
+		///<summary>Releases the unmanaged resources used by the MainForm and optionally releases the managed resources.</summary>
+		///<param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+		protected override void Dispose(bool disposing) {
+			if (disposing) {
+				if (context != null) context.Dispose();
+				if (components != null) components.Dispose();
 			}
+			base.Dispose(disposing);
 		}
 
 		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Error message")]
 		void SaveDB() {
-			using (var dialog = new ProgressDialog {
-				Caption = "Saving schedule to SQL Server...",
-				Maximum = -1,
-				CancelState = ButtonMode.Hidden
-
-			})
-			using (var waiter = new ManualResetEvent(false)) {
-				ThreadPool.QueueUserWorkItem(delegate {
-					try {
-						context.SaveChanges();
-					} catch (Exception ex) {
-						BeginInvoke(new Action(delegate {
-							XtraMessageBox.Show("An error occured while saving the schedule to SQL Server.\r\n\r\n" + ex,
-												"Shomrei Torah Schedulizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
-							dialog.FadeOut();
-						}));
-						return;
-					} finally { waiter.Set(); }
-					dialog.FadeOut();
-				});
-
-				if (waiter.WaitOne(TimeSpan.FromSeconds(.5), false))
-					return;	//If it finishes very quickly, don't show progress.  Otherwise, we get an annoying focus bounce whenever we switch cells
-
-				dialog.FadeIn();
-				dialog.ShowDialog(this);
-			}
+			Waiter.ExecAsync(() => context.SaveChanges(), "Saving schedule to SQL Server...");
 		}
 		private void doSave_ItemClick(object sender, ItemClickEventArgs e) { SaveDB(); }
 
@@ -104,10 +93,10 @@ namespace ShomreiTorah.Schedules.WinClient {
 			if (enableAutoSave.Checked)
 				SaveDB();
 			if (calendar.SelectedDate.HasValue) {
-				var cell = context.GetCell(calendar.SelectedDate.Value);
-
-				valueGridPanel.Text = calendar.SelectedDate.Value.EnglishDate.ToLongDateString();
-				cellEditor.Cell = cell;
+				loader.LoadCell(calendar.SelectedDate.Value, cell => {
+					valueGridPanel.Text = calendar.SelectedDate.Value.EnglishDate.ToLongDateString();
+					cellEditor.Cell = cell;
+				});
 			} else {
 				valueGridPanel.Text = "No date selected";
 				cellEditor.Cell = null;
@@ -213,21 +202,29 @@ namespace ShomreiTorah.Schedules.WinClient {
 		private void exportWord_ItemClick(object sender, ItemClickEventArgs e) {
 			HandleWord(true);	//If I don't call this now, I'll end up with two binders for the new document.
 			var binder = WordBinder.CreateDocument(context, calendar.MonthStart, 5, this);	//TODO: Error handling
+
 			AddWordBinder(binder);
 			RibbonBinder = binder;
 
-			var defaultPath = GetDefaultWordPath(calendar.MonthStart);
+			//Ugly hack to execute this after ExecAsync finishes
+			//creating the document from the WeekCount property.
+			Waiter.ExecAsync(delegate {
+				BeginInvoke(new Action(delegate {
 
-			if (DialogResult.Yes == XtraMessageBox.Show("Would you like to save this document?\r\n\r\nPath:  " + defaultPath,
-														"Shomrei Torah Schedulizer", MessageBoxButtons.YesNo, MessageBoxIcon.Question)) {
-				Directory.CreateDirectory(Path.GetDirectoryName(defaultPath));
+					var defaultPath = GetDefaultWordPath(calendar.MonthStart);
 
-				if (ConfirmSave(defaultPath + ".docx"))
-					binder.Document.SaveAs(defaultPath + ".docx", Word.WdSaveFormat.wdFormatXMLDocument);
+					if (DialogResult.Yes == XtraMessageBox.Show("Would you like to save this document?\r\n\r\nPath:  " + defaultPath,
+																"Shomrei Torah Schedulizer", MessageBoxButtons.YesNo, MessageBoxIcon.Question)) {
+						Directory.CreateDirectory(Path.GetDirectoryName(defaultPath));
 
-				if (ConfirmSave(defaultPath + ".pdf"))
-					binder.Document.SaveAs(defaultPath + ".pdf", Word.WdSaveFormat.wdFormatPDF);
-			}
+						if (ConfirmSave(defaultPath + ".docx"))
+							binder.Document.SaveAs(defaultPath + ".docx", Word.WdSaveFormat.wdFormatXMLDocument);
+
+						if (ConfirmSave(defaultPath + ".pdf"))
+							binder.Document.SaveAs(defaultPath + ".pdf", Word.WdSaveFormat.wdFormatPDF);
+					}
+				}));
+			}, "Busy");
 
 		}
 
@@ -340,9 +337,10 @@ namespace ShomreiTorah.Schedules.WinClient {
 			}
 		}
 		private void wbUpdateCell_ItemClick(object sender, ItemClickEventArgs e) {
-			var cell = context.GetCell(calendar.SelectedDate.Value);
-			RibbonBinder.UpdateTitle(cell);
-			RibbonBinder.UpdateTimes(cell);
+			loader.LoadCell(calendar.SelectedDate.Value, cell => {
+				RibbonBinder.UpdateTitle(cell);
+				RibbonBinder.UpdateTimes(cell);
+			});
 		}
 		private void wbUpdate_ItemClick(object sender, ItemClickEventArgs e) {
 			RibbonBinder.UpdateDocument();
@@ -367,7 +365,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 													   "Shomrei Torah Schedulizer", MessageBoxButtons.YesNo, MessageBoxIcon.Warning))
 				return;
 
-			PerformOperation(ui => {
+			Waiter.ExecAsync(ui => {
 				try {
 					ui.Caption = "Saving PDF...";
 					var pdfPath = String.IsNullOrEmpty(RibbonBinder.Document.Path) ? Path.GetTempFileName() : Path.ChangeExtension(RibbonBinder.Document.FullName, ".pdf");
@@ -390,7 +388,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 						XtraMessageBox.Show(ex.ToString(), "Shomrei Torah Schedulizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					}));
 				}
-			}, false);
+			}, "Uploading PDF", false);
 		}
 		#endregion
 		#endregion
@@ -399,7 +397,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 
 		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Error Handling")]
 		private void exportPowerpoint_ItemClick(object sender, ItemClickEventArgs e) {
-			PerformOperation(ui => {
+			Waiter.ExecAsync(ui => {
 				ui.Caption = "Opening Announcements...";
 				PowerPoint.Presentation announcements;
 				try {
@@ -435,21 +433,13 @@ namespace ShomreiTorah.Schedules.WinClient {
 				}
 				announcements.Windows[1].Activate();
 				announcements.Application.Activate();
-			}, true);
+			}, "Creating Announcements", true);
 		}
 		#endregion
 
-		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Error handling")]
-		public void PerformOperation(Action<IProgressReporter> method, bool cancellable) {
-			try {
-				ProgressWorker.Execute(method, cancellable);
-			} catch (TargetInvocationException ex) {
-				XtraMessageBox.Show("An error occured.  Please think carefully before doing anything else.\r\n\r\n" + ex.InnerException,
-									"Shomrei Torah Schedulizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			}
-		}
-
 		private void calendar_DateToolTip(object sender, CalendarToolTipEventArgs e) {
+			if (loader.GetState(e.Date) != DataState.Ready)
+				return;
 			var warning = context.GetCell(e.Date).GetWarning();
 			if (!String.IsNullOrEmpty(warning))
 				e.ToolTipText.AppendLine().AppendLine("WARNING").AppendLine().AppendLine(warning);
@@ -464,6 +454,10 @@ namespace ShomreiTorah.Schedules.WinClient {
 			}
 
 			base.OnClosing(e);
+		}
+
+		void IExportUIProvider.PerformOperation(Action<IProgressReporter> method, bool cancellable) {
+			Waiter.ExecAsync(method, "Exporting", cancellable);
 		}
 	}
 	static class Extensions {
