@@ -15,17 +15,12 @@ namespace ShomreiTorah.Schedules.WinClient {
 			if ((cell.Date + 1).Info.Is(Holiday.פסח.Days.First()))
 				return "Please add חמץ times";
 
-			if ((cell.Date + 1).Info.Is(Holiday.All["תענית בכורות"]))
-				return "Please think about בדיקת חמץ";
-
 			if (cell.Holiday.Is(Holiday.סוכות.Days[2]))
 				return "Please ask the Rav when the שמחת בית השואבה is.  (It's usually 9:00)";
-			if (cell.Holiday.Is(Holiday.סוכות.Days[5]) && cell.Isשבת)
-				return "Please ask the Rav when משה תורה is";
 
 			var duplicateTimes = cell.Times.GroupBy(st => st.Time).Where(g => g.Has(2));
 			if (duplicateTimes.Any())
-				return "This date has multiple entries for the same time:\r\n  • " 
+				return "This date has multiple entries for the same time:\r\n  • "
 					+ duplicateTimes
 						.SelectMany(g => g)
 						.OrderBy(st => st.Time)
