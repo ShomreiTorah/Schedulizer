@@ -403,7 +403,13 @@ namespace ShomreiTorah.Schedules.WinClient {
 				try {
 					var powerpoint = new PowerPoint.Application();
 					powerpoint.Visible = MsoBool.msoTrue;
-					var announcementsPath = Config.ReadAttribute("Schedules", "Announcements");
+					var announcementsPath = String.Format(CultureInfo.InvariantCulture, Config.ReadAttribute("Schedules", "Announcements"), calendar.MonthStart.EnglishDate);
+
+					if (!File.Exists(announcementsPath)) {
+						XtraMessageBox.Show("Please create " + announcementsPath + " by copying from last year",
+											"Shomrei Torah Schedulizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						return;
+					}
 
 					announcements = powerpoint.Presentations.Items().FirstOrDefault(pres => pres.FullName == announcementsPath)
 								 ?? powerpoint.Presentations.Open(announcementsPath, MsoBool.msoFalse, MsoBool.msoFalse, MsoBool.msoTrue);
