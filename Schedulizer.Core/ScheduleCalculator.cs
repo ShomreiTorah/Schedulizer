@@ -318,6 +318,8 @@ namespace ShomreiTorah.Schedules {
 						yield return new ScheduleValue("מעריב", defaultמנחה + TimeSpan.FromMinutes(70));
 					else if (Isיוםטוב && !(Date + 1).Info.Isשבתיוםטוב)	//Because we don't say ויהי נועם, we daven מעריב five minutes later.
 						yield return new ScheduleValue("מעריב", defaultמנחה + TimeSpan.FromMinutes(85));
+					else if (Isיוםטוב)
+						yield return new ScheduleValue("מעריב", Zmanim.Sunset + TimeSpan.FromMinutes(54).RoundDown());
 					else
 						yield return new ScheduleValue("מעריב", defaultמנחה + TimeSpan.FromMinutes(80));
 				}
@@ -404,9 +406,12 @@ namespace ShomreiTorah.Schedules {
 						return universal.ToLocalTime().TimeOfDay;
 					};
 					var baseמנחה = new[] {
-					 	FixUtcמנחה(Date.Last(DayOfWeek.Friday)),
-						FixUtcמנחה(Date.Next(DayOfWeek.Friday))
-					}.Min();
+					 		FixUtcמנחה(Date.Last(DayOfWeek.Friday)),
+							FixUtcמנחה(Date.Next(DayOfWeek.Friday))
+						}.Min();
+
+					if (Date >= new DateTime(2012, 5, 13))
+						baseמנחה += TimeSpan.FromMinutes(5);
 
 					yield return new ScheduleValue("מנחה", baseמנחה);
 					yield return new ScheduleValue("מעריב", Zmanim.Sunset + TimeSpan.FromMinutes(3));
