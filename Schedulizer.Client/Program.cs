@@ -15,7 +15,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 		static void Main() {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			OfficeSkins.Register();
+			BonusSkins.Register();
 			if (Path.GetFileName(Path.GetDirectoryName(typeof(Program).Assembly.Location)) == "Debug")
 				UserLookAndFeel.Default.SkinName = "Office 2007 Black";
 			else
