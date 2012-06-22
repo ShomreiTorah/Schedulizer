@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schedulizer.Core", "Schedulizer.Core\Schedulizer.Core.csproj", "{A111D4E1-561F-405F-8FA4-6111A1D329B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schedulizer.Exporter", "Schedulizer.Exporter\Schedulizer.Exporter.csproj", "{4641996C-B83D-4039-AD25-A21E410116AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schedulizer.Client", "Schedulizer.Client\Schedulizer.Client.csproj", "{B69C2C7F-D2BC-4F05-BCCB-24B2583277CE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{3F57E3A7-E31A-4520-A3C4-CF86A0796EDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShomreiTorah.Common", "..\..\Libraries\ShomreiTorah.Common\ShomreiTorah.Common.csproj", "{1308A6E1-7787-49F6-A19C-8AF327DAF9B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShomreiTorah.WinForms", "..\..\Libraries\ShomreiTorah.WinForms\ShomreiTorah.WinForms.csproj", "{0B927F97-8CDD-47CB-B775-CA1E0AB2409C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B927F97-8CDD-47CB-B775-CA1E0AB2409C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B927F97-8CDD-47CB-B775-CA1E0AB2409C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B927F97-8CDD-47CB-B775-CA1E0AB2409C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B927F97-8CDD-47CB-B775-CA1E0AB2409C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1308A6E1-7787-49F6-A19C-8AF327DAF9B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1308A6E1-7787-49F6-A19C-8AF327DAF9B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1308A6E1-7787-49F6-A19C-8AF327DAF9B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1308A6E1-7787-49F6-A19C-8AF327DAF9B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4641996C-B83D-4039-AD25-A21E410116AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4641996C-B83D-4039-AD25-A21E410116AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4641996C-B83D-4039-AD25-A21E410116AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4641996C-B83D-4039-AD25-A21E410116AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A111D4E1-561F-405F-8FA4-6111A1D329B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A111D4E1-561F-405F-8FA4-6111A1D329B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A111D4E1-561F-405F-8FA4-6111A1D329B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A111D4E1-561F-405F-8FA4-6111A1D329B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B69C2C7F-D2BC-4F05-BCCB-24B2583277CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B69C2C7F-D2BC-4F05-BCCB-24B2583277CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B69C2C7F-D2BC-4F05-BCCB-24B2583277CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B69C2C7F-D2BC-4F05-BCCB-24B2583277CE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0B927F97-8CDD-47CB-B775-CA1E0AB2409C} = {3F57E3A7-E31A-4520-A3C4-CF86A0796EDD}
+		{1308A6E1-7787-49F6-A19C-8AF327DAF9B5} = {3F57E3A7-E31A-4520-A3C4-CF86A0796EDD}
+	EndGlobalSection
+EndGlobal

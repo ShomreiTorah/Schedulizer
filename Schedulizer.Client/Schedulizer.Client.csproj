@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -14,7 +14,8 @@
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>Schedulizer.ico</ApplicationIcon>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Shul.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -49,7 +50,7 @@
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisRuleSet>..\..\..\ShomreiTorah Minimal.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\Setup\Common\ShomreiTorah Minimal.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -85,13 +86,19 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.PowerPoint.Extensions, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\Assemblies\Microsoft.Office.Interop.PowerPoint.Extensions.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Office.Interop.PowerPoint.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Word, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Word.Extensions, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\Assemblies\Microsoft.Office.Interop.Word.Extensions.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Office.Interop.Word.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack">
+      <HintPath>..\packages\Windows7APICodePack-Core.1.1.0.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell">
+      <HintPath>..\packages\Windows7APICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
     <Reference Include="Office, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
       <Private>True</Private>
@@ -154,11 +161,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Shul.pfx" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -186,45 +193,28 @@
     <None Include="Resources\UpdateCell32.png" />
     <None Include="Resources\UpdateDirty32.png" />
     <None Include="Resources\ResetMonth32.png" />
-    <Content Include="..\..\..\CustomDictionary.xml">
+    <CodeAnalysisDictionary Include="..\..\..\Setup\Common\CustomDictionary.xml">
       <Link>CustomDictionary.xml</Link>
-    </Content>
+    </CodeAnalysisDictionary>
     <Content Include="Schedulizer.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Libraries\ShomreiTorah.Common\ShomreiTorah.Common.csproj">
-      <Project>{1308A6E1-7787-49F6-A19C-8AF327DAF9B5}</Project>
+      <Project>{1308a6e1-7787-49f6-a19c-8af327daf9b5}</Project>
       <Name>ShomreiTorah.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Libraries\ShomreiTorah.WinForms\ShomreiTorah.WinForms.csproj">
-      <Project>{0B927F97-8CDD-47CB-B775-CA1E0AB2409C}</Project>
+      <Project>{0b927f97-8cdd-47cb-b775-ca1e0ab2409c}</Project>
       <Name>ShomreiTorah.WinForms</Name>
     </ProjectReference>
     <ProjectReference Include="..\Schedulizer.Core\Schedulizer.Core.csproj">
-      <Project>{A111D4E1-561F-405F-8FA4-6111A1D329B3}</Project>
+      <Project>{a111d4e1-561f-405f-8fa4-6111a1d329b3}</Project>
       <Name>Schedulizer.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Schedulizer.Exporter\Schedulizer.Exporter.csproj">
-      <Project>{4641996C-B83D-4039-AD25-A21E410116AA}</Project>
+      <Project>{4641996c-b83d-4039-ad25-a21e410116aa}</Project>
       <Name>Schedulizer.Exporter</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
