@@ -365,7 +365,7 @@ namespace ShomreiTorah.Schedules {
 			} else if (HolidayName == "תענית אסתר") {
 				var mincha = (Zmanim.Sunset - TimeSpan.FromMinutes(30)).RoundUp();
 
-				if (TimeZoneInfo.Local.IsDaylightSavingTime(Date)	//פורים is on Sunday
+				if (TimeZoneInfo.Local.IsDaylightSavingTime(Date)		//פורים is on Sunday
 					|| (Date + 1).Info.Is(Holiday.פורים)) {				//פורים is on Tuesday, Thursday, or Friday
 					yield return new ScheduleValue("מנחה", mincha);
 					yield return new ScheduleValue("מעריב", mincha + TimeSpan.FromHours(1));
@@ -389,7 +389,8 @@ namespace ShomreiTorah.Schedules {
 				yield return new ScheduleValue("מנחה", Time(1, 40, PM));
 				yield return new ScheduleValue("מעריב", Zmanim.Sunset.RoundUp() + TimeSpan.FromMinutes(30));
 			} else if (HolidayName == "י\"ז בתמוז") {
-				var mincha = (Zmanim.Sunset - TimeSpan.FromMinutes(30)).RoundDown();		//TODO: Down or up?
+				var mincha = (Zmanim.Sunset - TimeSpan.FromMinutes(30)).RoundDown();		
+				yield return new ScheduleValue(dafYomiString, mincha - TimeSpan.FromMinutes(30));
 				yield return new ScheduleValue("מנחה", mincha);
 				yield return new ScheduleValue("מעריב", mincha + TimeSpan.FromHours(1));
 			}
