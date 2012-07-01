@@ -48,6 +48,9 @@ namespace ShomreiTorah.Schedules {
 			 || (DayOfWeek == DayOfWeek.Thursday && !(Date).Info.Is(HolidayCategory.דאריתא) && (Date + 1).Info.Is(HolidayCategory.דאריתא)))
 				retVal.AppendLine("ערוב תבשילין");
 
+			if ((Date + 1).Info.Is(Holiday.תשעה٠באב))
+				retVal.AppendLine("Bring shoes on ערב שבת");
+
 			return retVal.ToString().Trim();
 		}
 
@@ -279,7 +282,10 @@ namespace ShomreiTorah.Schedules {
 					actualמנחה -= TimeSpan.FromMinutes(15);
 				else if (Holiday.Is(Holiday.יום٠כיפור))
 					actualמנחה -= TimeSpan.FromMinutes(110);
-				else if (!Isשבת)
+				else if ((Date + 1).Info.Is(Holiday.תשעה٠באב)) {
+					actualמנחה -= TimeSpan.FromMinutes(80);
+					isמנחהBold = true;
+				} else if (!Isשבת)
 					actualמנחה += TimeSpan.FromMinutes(5);
 				else if (HolidayCategory == HolidayCategory.חולהמועד) {	//שבת חול המועד מנחה is early to allow for סעודה שלישית.
 					actualמנחה -= TimeSpan.FromMinutes(15);
@@ -389,7 +395,7 @@ namespace ShomreiTorah.Schedules {
 				yield return new ScheduleValue("מנחה", Time(1, 40, PM));
 				yield return new ScheduleValue("מעריב", Zmanim.Sunset.RoundUp() + TimeSpan.FromMinutes(30));
 			} else if (HolidayName == "י\"ז בתמוז") {
-				var mincha = (Zmanim.Sunset - TimeSpan.FromMinutes(30)).RoundDown();		
+				var mincha = (Zmanim.Sunset - TimeSpan.FromMinutes(30)).RoundDown();
 				yield return new ScheduleValue(dafYomiString, mincha - TimeSpan.FromMinutes(30));
 				yield return new ScheduleValue("מנחה", mincha);
 				yield return new ScheduleValue("מעריב", mincha + TimeSpan.FromHours(1));
