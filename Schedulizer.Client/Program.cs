@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using DevExpress.LookAndFeel;
 using DevExpress.UserSkins;
 using System.IO;
+using ShomreiTorah.Common;
 
 namespace ShomreiTorah.Schedules.WinClient {
 	static class Program {
@@ -15,11 +16,12 @@ namespace ShomreiTorah.Schedules.WinClient {
 		static void Main() {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			BonusSkins.Register();
-			if (Path.GetFileName(Path.GetDirectoryName(typeof(Program).Assembly.Location)) == "Debug")
-				UserLookAndFeel.Default.SkinName = "Office 2007 Black";
+
+			Config.ForceLoad();
+			if (Config.IsDebug)
+				UserLookAndFeel.Default.SkinName = "DevExpress Dark Style";
 			else
-				UserLookAndFeel.Default.SkinName = "Office 2007 Blue";
+				UserLookAndFeel.Default.SkinName = "Office 2010 Blue";
 
 			Application.Run(new MainForm());
 		}
