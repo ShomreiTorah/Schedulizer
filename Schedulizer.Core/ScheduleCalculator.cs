@@ -220,8 +220,13 @@ namespace ShomreiTorah.Schedules {
 			} else if ((Date - 1) == GetSelichosStart(Date.HebrewYear)) {
 				yield return new ScheduleValue("סליחות", Time(1, 00, AM), true);
 			} else if (DayOfWeek == DayOfWeek.Sunday) {
-				yield return new ScheduleValue("שחרית", Time(7, 15, AM));
-				yield return new ScheduleValue("שחרית", Time(9, 00, AM));
+				if (Date >= new DateTime(Date.EnglishDate.Year, 6, 25)	//During the summer, we only have one שחרית
+				 && Date < new DateTime(Date.EnglishDate.Year, 9, 1))
+					yield return new ScheduleValue("שחרית", Time(8, 00, AM));
+				else {
+					yield return new ScheduleValue("שחרית", Time(7, 15, AM));
+					yield return new ScheduleValue("שחרית", Time(9, 00, AM));
+				}
 			} else {
 				var shacharis = GetWeekdayשחרית(out isשחריתBold);
 				var selichosOffset = GetסליחותOffset();
