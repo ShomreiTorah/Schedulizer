@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using DevExpress.LookAndFeel;
-using DevExpress.UserSkins;
-using System.IO;
 using ShomreiTorah.Common;
 
 namespace ShomreiTorah.Schedules.WinClient {
@@ -17,7 +13,6 @@ namespace ShomreiTorah.Schedules.WinClient {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			Config.ForceLoad();
 			if (Config.IsDebug)
 				UserLookAndFeel.Default.SkinName = "DevExpress Dark Style";
 			else
