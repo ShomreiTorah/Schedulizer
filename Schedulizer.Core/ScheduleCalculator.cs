@@ -399,9 +399,11 @@ namespace ShomreiTorah.Schedules {
 			} else if (Holiday.Is(Holiday.תשעה٠באב)) {
 				yield return new ScheduleValue("מנחה", Time(1, 40, PM));
 				yield return new ScheduleValue("מעריב", Zmanim.Sunset.RoundUp() + TimeSpan.FromMinutes(30));
-			} else if (HolidayName == "י\"ז בתמוז") {
+			} else if (HolidayCategory == HolidayCategory.תענית		//On a weekday, עשרה בטבת is too early for מנחה/מעריב.
+				   && (HolidayName != "עשרה בטבת" || DayOfWeek == DayOfWeek.Sunday)) {
 				var mincha = (Zmanim.Sunset - TimeSpan.FromMinutes(30)).RoundDown();
-				yield return new ScheduleValue(dafYomiString, mincha - TimeSpan.FromMinutes(30));
+				if (mincha >= Time(7, 00, PM) || DayOfWeek == DayOfWeek.Sunday)
+					yield return new ScheduleValue(dafYomiString, mincha - TimeSpan.FromMinutes(30));
 				yield return new ScheduleValue("מנחה", mincha);
 				yield return new ScheduleValue("מעריב", mincha + TimeSpan.FromHours(1));
 			}
@@ -411,7 +413,8 @@ namespace ShomreiTorah.Schedules {
 			}
 
 			if (dafYomi == דףיומיType.WeekNight) {
-				if (Date > new DateTime(2012, 03, 12)) {
+				var laborDay = new DateTime(Date.EnglishDate.Year, 9, 1).Next(DayOfWeek.Monday);
+				if (Date > new DateTime(2012, 03, 12) && Zmanim.Sunset > Time(7, 18, PM) && Date < laborDay) {
 					Func<DateTime, TimeSpan> FixUtcמנחה = friday => {
 						var universal = DateTime.SpecifyKind(this.Date, DateTimeKind.Utc)
 									  + (friday + GetDefaultערב٠שבת٠מנחה(friday)).ToUniversalTime().TimeOfDay;
