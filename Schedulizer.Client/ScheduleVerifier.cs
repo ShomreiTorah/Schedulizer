@@ -9,6 +9,8 @@ using ShomreiTorah.Common.Calendar.Holidays;
 namespace ShomreiTorah.Schedules.WinClient {
 	static class ScheduleVerifier {
 		public static string GetWarning(this ScheduleCell cell) {
+			//TODO: סליחות on Sunday
+
 			if (cell.HolidayCategory == HolidayCategory.תענית)
 				return "Please check all fast days carefully";
 
