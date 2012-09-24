@@ -149,7 +149,8 @@ namespace ShomreiTorah.Schedules {
 			else if (Isשבת) {
 				if ((Date - 1).Info.Is(Holiday.סוכות.Days.Last()))
 					dafYomi = דףיומיType.Beforeמנחה;			//On שבת אסרו חג סוכות, there is no שיעור, since people are likely to go away
-				else if (HolidayName == "שבת הגדול")
+				else if (HolidayName == "שבת שובה" ||
+						 (Date > new HebrewDayOfYear(HebrewMonth.ניסן, 6) && Date < new HebrewDayOfYear(HebrewMonth.ניסן, 14)))
 					dafYomi = דףיומיType.Beforeשחרית;
 				else if (Date.EnglishDate.IsDaylightSavingTime())
 					dafYomi = דףיומיType.Beforeשיעור;
@@ -165,6 +166,7 @@ namespace ShomreiTorah.Schedules {
 			else
 				dafYomi = דףיומיType.WeekNight;
 
+			//TODO: שובה
 			if (dafYomi == דףיומיType.Beforeשחרית)
 				yield return new ScheduleValue(dafYomiString, Time(7, 30, AM));
 
@@ -340,7 +342,7 @@ namespace ShomreiTorah.Schedules {
 					else if (Isיוםטוב && !(Date + 1).Info.Isשבתיוםטוב)	//Because we don't say ויהי נועם, we daven מעריב five minutes later.
 						yield return new ScheduleValue("מעריב", defaultמנחה + TimeSpan.FromMinutes(85));
 					else if (Isיוםטוב)
-						yield return new ScheduleValue("מעריב", Zmanim.Sunset + TimeSpan.FromMinutes(54).RoundDown());
+						yield return new ScheduleValue("מעריב", (Zmanim.Sunset + TimeSpan.FromMinutes(54)).RoundDown());
 					else
 						yield return new ScheduleValue("מעריב", defaultמנחה + TimeSpan.FromMinutes(80));
 				}
@@ -423,8 +425,8 @@ namespace ShomreiTorah.Schedules {
 			}
 
 			if (dafYomi == דףיומיType.WeekNight) {
-				if (Date > new DateTime(2012, 03, 12) && Zmanim.Sunset > Time(7, 18, PM) && Date <= laborDay) {
-					#region Summer
+				if (DayOfWeek == DayOfWeek.Sunday || (Zmanim.Sunset > Time(7, 18, PM) && Date <= laborDay)) {
+					#region מנחה־מעריב
 					Func<DateTime, TimeSpan> FixUtcמנחה = friday => {
 						var universal = DateTime.SpecifyKind(this.Date, DateTimeKind.Utc)
 									  + (friday + GetDefaultערב٠שבת٠מנחה(friday)).ToUniversalTime().TimeOfDay;
