@@ -236,8 +236,7 @@ namespace ShomreiTorah.Schedules {
 					 && Date < laborDay)
 					yield return new ScheduleValue("שחרית", Time(8, 00, AM));
 				else {
-					yield return new ScheduleValue("שחרית", Time(7, 15, AM));
-					yield return new ScheduleValue("שחרית", Time(9, 00, AM));
+					yield return new ScheduleValue("שחרית", Time(7, 45, AM));
 				}
 			} else {
 				var shacharis = GetWeekdayשחרית(out isשחריתBold);
