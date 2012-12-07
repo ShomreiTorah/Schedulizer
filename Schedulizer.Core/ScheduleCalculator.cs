@@ -51,6 +51,9 @@ namespace ShomreiTorah.Schedules {
 			if ((Date + 1).Info.Is(Holiday.תשעה٠באב))
 				retVal.AppendLine("Bring shoes on ערב שבת");
 
+			if (Date.EnglishDate.Month == 12 && Date.EnglishDate.Day == 4 + (DateTime.IsLeapYear(Date.EnglishDate.Year + 1) ? 1 : 0))
+				retVal.AppendLine("ותן טל ומטר");
+
 			return retVal.ToString().Trim();
 		}
 
@@ -141,6 +144,9 @@ namespace ShomreiTorah.Schedules {
 		public virtual IEnumerable<ScheduleValue> CalcTimes() {
 			if (HolidayCategory == HolidayCategory.תענית && !Holiday.Is(Holiday.תשעה٠באב))
 				yield return new ScheduleValue("Fast Begins", Zmanim.Sunrise - TimeSpan.FromMinutes(72));
+			if (!Isשבת && !Isיוםטוב
+			 && Time(6, 55, AM) <= Zmanim.Sunrise && Zmanim.Sunrise <= Time(7, 10, AM))
+				yield return new ScheduleValue("נץ", Zmanim.Sunrise);
 
 			string dafYomiString = "דף יומי";//I wanted to do this, but it doesn't fit in Word.  "דף יומי – " + Date.Info.DafYomiString;
 			דףיומיType dafYomi;
@@ -237,7 +243,7 @@ namespace ShomreiTorah.Schedules {
 				} else if (Date >= new DateTime(Date.EnglishDate.Year, 6, 25)	//During the summer, we only have one שחרית
 					 && Date < laborDay)
 					yield return new ScheduleValue("שחרית", Time(8, 00, AM));
-				else if (Date.EnglishDate.Month < 12) {
+				else {
 					yield return new ScheduleValue("שחרית", Time(7, 45, AM));
 				}
 			} else {
