@@ -464,7 +464,10 @@ namespace ShomreiTorah.Schedules {
 							yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
 						if (Date > new DateTime(2011, 12, 1))
 							yield return new ScheduleValue("מעריב", Time(10, 00, PM));
-
+					} else if (Date >= new DateTime(2012, 12, 17)) {
+						yield return new ScheduleValue("משנה ברורה", Time(8, 40, PM));
+						yield return new ScheduleValue(dafYomiString, Time(9, 15, PM));
+						yield return new ScheduleValue("מעריב", Time(9, 00, PM));
 					} else {
 						yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
 						yield return new ScheduleValue("מעריב", Time(10, 00, PM));
