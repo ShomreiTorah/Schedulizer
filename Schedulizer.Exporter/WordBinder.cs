@@ -13,6 +13,7 @@ using Microsoft.Office.Interop.Word.Extensions;
 using ShomreiTorah.Common;
 using ShomreiTorah.Common.Calendar;
 using ShomreiTorah.Common.Calendar.Holidays;
+using Word = Microsoft.Office.Interop.Word;
 
 namespace ShomreiTorah.Schedules.Export {
 	///<summary>Binds a portion of the schedule to a Word document.</summary>
@@ -283,13 +284,19 @@ namespace ShomreiTorah.Schedules.Export {
 										var row = ScheduleTable.Rows[w + 2];
 										for (int c = 0; c < 6; c++) {	//Skip שבת
 											var date = StartDate + (7 * w + c);
-											if (!date.Info.Is(HolidayCategory.דאריתא)) continue;
 
-											var cell = row.Cells[c + 1];
+											if (date.Info.Is(HolidayCategory.דרבנן, HolidayCategory.חולהמועד, HolidayCategory.תענית)) {
+												var cell = row.Cells[c + 1];
+												var titleControl = cell.Range.ContentControls[1];
+												titleControl.Range.Font.TextColor.SetFrom(שבתStyle.Font.TextColor);
+											} else if (date.Info.Is(HolidayCategory.דאריתא)) {
+												var cell = row.Cells[c + 1];
 
-											cell.Shading.Texture = שבתStyle.Shading.Texture;
-											cell.Shading.BackgroundPatternColor = שבתStyle.Shading.BackgroundPatternColor;
-											cell.Shading.ForegroundPatternColor = שבתStyle.Shading.ForegroundPatternColor;
+												cell.Shading.Texture = שבתStyle.Shading.Texture;
+												cell.Shading.BackgroundPatternColor = שבתStyle.Shading.BackgroundPatternColor;
+												cell.Shading.ForegroundPatternColor = שבתStyle.Shading.ForegroundPatternColor;
+												cell.Range.Font.TextColor.SetFrom(שבתStyle.Font.TextColor);
+											}
 										}
 									}
 								}
@@ -374,6 +381,13 @@ namespace ShomreiTorah.Schedules.Export {
 		}
 	}
 	static class WordExtensions {
+		public static void SetFrom(this Word.ColorFormat target, Word.ColorFormat source) {
+			if (source.ObjectThemeColor != WdThemeColorIndex.wdNotThemeColor)
+				target.ObjectThemeColor = source.ObjectThemeColor;
+			else
+				target.RGB = source.RGB;
+		}
+
 		public static int LinesUsed(this ScheduleCell day) {
 			//Even an empty title will still use one line
 			return Math.Max(1, day.Title.Trim().Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length)
