@@ -418,8 +418,8 @@ namespace ShomreiTorah.Schedules {
 				dafYomi = דףיומיType.None;
 
 			} else if (Holiday.Is(Holiday.תשעה٠באב)) {
-                yield return new ScheduleValue("מנחה", Time(1, 40, PM));
-                yield return new ScheduleValue("חצות", Zmanim.חצות);
+				yield return new ScheduleValue("מנחה", Time(1, 40, PM));
+				yield return new ScheduleValue("חצות", Zmanim.חצות);
 				yield return new ScheduleValue("מעריב", Zmanim.Sunset.RoundUp() + TimeSpan.FromMinutes(30));
 				dafYomi = דףיומיType.None;
 			} else if (HolidayCategory == HolidayCategory.תענית		//On a weekday, עשרה בטבת is too early for מנחה/מעריב.
@@ -439,7 +439,8 @@ namespace ShomreiTorah.Schedules {
 			if (dafYomi == דףיומיType.NightAlone)
 				yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
 			else if (dafYomi == דףיומיType.WeekNight) {
-				var hasמשנהברורה = Date.EnglishDate.Year >= 2013 && Date >= new DateTime(Date.EnglishDate.Year, 4, 8) && Date <= new DateTime(Date.EnglishDate.Year, 6, 25);
+				var hasמשנהברורה = Date.EnglishDate.Year >= 2013 
+				 && (Date >= Holiday.סוכות.Days.Last().Date.GetDate(Date.HebrewYear) || Date <= new DateTime(Date.EnglishDate.Year, 6, 25));
 
 				if (DayOfWeek == DayOfWeek.Sunday || (Zmanim.Sunset > Time(7, 18, PM) && Date <= new DateTime(2012, 09, 03))) {
 					#region מנחה־מעריב
@@ -457,7 +458,7 @@ namespace ShomreiTorah.Schedules {
 					 && !(Date + 2).Info.Is(Holiday.פסח[1]))
 						yield return new ScheduleValue("מעריב", Time(10, 00, PM));
 					#endregion
-					if (DayOfWeek == DayOfWeek.Sunday && hasמשנהברורה)
+					if (DayOfWeek == DayOfWeek.Sunday && hasמשנהברורה && Date.HebrewYear == 5773)
 						yield return new ScheduleValue("משנה ברורה", Zmanim.Sunset + TimeSpan.FromMinutes(3 + 20));
 				} else {
 					//Non-summer
