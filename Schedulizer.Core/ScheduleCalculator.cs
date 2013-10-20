@@ -145,9 +145,6 @@ namespace ShomreiTorah.Schedules {
 		public virtual IEnumerable<ScheduleValue> CalcTimes() {
 			if (HolidayCategory == HolidayCategory.תענית && !Holiday.Is(Holiday.תשעה٠באב))
 				yield return new ScheduleValue("Fast Begins", Zmanim.Sunrise - TimeSpan.FromMinutes(72));
-			if (!Isשבת && !Isיוםטוב
-			 && Time(6, 55, AM) <= Zmanim.Sunrise && Zmanim.Sunrise <= Time(7, 10, AM))
-				yield return new ScheduleValue("נץ", Zmanim.Sunrise);
 
 			string dafYomiString = "דף יומי";//I wanted to do this, but it doesn't fit in Word.  "דף יומי – " + Date.Info.DafYomiString;
 			דףיומיType dafYomi;
@@ -248,6 +245,9 @@ namespace ShomreiTorah.Schedules {
 			} else {
 				var shacharis = GetWeekdayשחרית(out isשחריתBold);
 				var selichosOffset = GetסליחותOffset();
+
+			if (shacharis >= Zmanim.Sunrise - TimeSpan.FromMinutes(30) && shacharis <= Zmanim.Sunrise - TimeSpan.FromMinutes(23))
+				yield return new ScheduleValue("נץ", Zmanim.Sunrise);
 
 				if (selichosOffset.HasValue)
 					yield return new ScheduleValue("סליחות", shacharis - selichosOffset.Value, true);
