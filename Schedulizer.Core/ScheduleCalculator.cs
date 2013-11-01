@@ -54,6 +54,12 @@ namespace ShomreiTorah.Schedules {
 			if (Date.EnglishDate.Month == 12 && Date.EnglishDate.Day == 4 + (DateTime.IsLeapYear(Date.EnglishDate.Year + 1) ? 1 : 0))
 				retVal.AppendLine("ותן טל ומטר");
 
+			// Check for a DST transition between midnight & 6AM
+			if (Date.EnglishDate.IsDaylightSavingTime() && !Date.EnglishDate.AddHours(6).IsDaylightSavingTime())
+				retVal.AppendLine("Daylight Saving Time Ends");
+			if (!Date.EnglishDate.IsDaylightSavingTime() && Date.EnglishDate.AddHours(6).IsDaylightSavingTime())
+				retVal.AppendLine("Daylight Saving Time Begins");
+
 			return retVal.ToString().Trim();
 		}
 
@@ -161,10 +167,10 @@ namespace ShomreiTorah.Schedules {
 				else
 					dafYomi = דףיומיType.Beforeשחרית;
 
-			} else if (HolidayCategory == HolidayCategory.תענית)
-				dafYomi = דףיומיType.NightAlone;
-			else if ((Date + 1).Info.Isשבתיוםטוב || (Date + 1).Info.Is(Holiday.תשעה٠באב))
+			} else if ((Date + 1).Info.Isשבתיוםטוב || (Date + 1).Info.Is(Holiday.תשעה٠באב))
 				dafYomi = דףיומיType.None;
+			else if (HolidayCategory == HolidayCategory.תענית)
+				dafYomi = דףיומיType.NightAlone;
 			else if (Holiday.Is(Holiday.סוכות.Days[5]))	//Special דף יומי on משנה תורה; handled elsewhere
 				dafYomi = דףיומיType.None;
 			else
@@ -383,7 +389,7 @@ namespace ShomreiTorah.Schedules {
 					if (!(Date + 1).Info.Is(Holiday.חנוכה)) {
 						if (Zmanim.Sunset < Time(5, 05, PM))
 							yield return new ScheduleValue("חומש שיעור", Time(8, 00, PM));
-						if (Zmanim.Sunset < Time(5, 15, PM))
+						else if (Zmanim.Sunset < Time(5, 15, PM))
 							yield return new ScheduleValue("חומש שיעור", Time(8, 15, PM), true);
 						else if (Zmanim.Sunset < Time(5, 40, PM))
 							yield return new ScheduleValue("חומש שיעור", Time(8, 30, PM), true);
@@ -423,7 +429,7 @@ namespace ShomreiTorah.Schedules {
 				yield return new ScheduleValue("מעריב", Zmanim.Sunset.RoundUp() + TimeSpan.FromMinutes(30));
 				dafYomi = דףיומיType.None;
 			} else if (HolidayCategory == HolidayCategory.תענית		//On a weekday, עשרה בטבת is too early for מנחה/מעריב.
-				   && (HolidayName != "עשרה בטבת" || DayOfWeek == DayOfWeek.Sunday)) {
+					&& (HolidayName != "עשרה בטבת" || DayOfWeek == DayOfWeek.Sunday)) {
 				var mincha = (Zmanim.Sunset - TimeSpan.FromMinutes(30)).RoundDown();
 				if (mincha >= Time(7, 00, PM) || DayOfWeek == DayOfWeek.Sunday) {
 					yield return new ScheduleValue(dafYomiString, mincha - TimeSpan.FromMinutes(30));
@@ -479,7 +485,7 @@ namespace ShomreiTorah.Schedules {
 
 			if ((Date + 1).Info.Is(Holiday.תשעה٠באב))
 				yield return new ScheduleValue("Sunset", Zmanim.Sunset);
-			if (HolidayCategory == HolidayCategory.תענית)
+			if (HolidayCategory == HolidayCategory.תענית && DayOfWeek != DayOfWeek.Friday)
 				yield return new ScheduleValue("Fast Ends", Zmanim.Sunset + TimeSpan.FromMinutes(45));
 
 			yield break;
