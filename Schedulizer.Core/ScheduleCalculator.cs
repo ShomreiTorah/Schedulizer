@@ -102,9 +102,11 @@ namespace ShomreiTorah.Schedules {
 			if (Date.Info.Isראשחודש) {
 				isBold = true;
 				return Time(6, 30, AM);
-			} else if (DayOfWeek == DayOfWeek.Monday || DayOfWeek == DayOfWeek.Thursday)
-				return Time(6, 35, AM);
-			else
+            } else if (Holiday.Is(Holiday.חנוכה))
+                return Time(6, 30, AM);
+            else if (DayOfWeek == DayOfWeek.Monday || DayOfWeek == DayOfWeek.Thursday)
+                return Time(6, 35, AM);
+            else
 				return Time(6, 45, AM);
 		}
 		static HebrewDate GetSelichosStart(int hebrewYear) {
@@ -228,11 +230,9 @@ namespace ShomreiTorah.Schedules {
 				yield return new ScheduleValue("שחרית", shacharis);
 				yield return new ScheduleValue("מגילה", shacharis + TimeSpan.FromMinutes(45));
 				yield return new ScheduleValue("מגילה", shacharis + TimeSpan.FromHours(2));
-			} else if (Holiday.Is(Holiday.חנוכה)) {
-				if (DayOfWeek == DayOfWeek.Sunday)
-					yield return new ScheduleValue("שחרית", Time(8, 00, AM));
-				else
-					yield return new ScheduleValue("שחרית", Time(6, 30, AM));
+			} else if (Holiday.Is(Holiday.חנוכה) && DayOfWeek == DayOfWeek.Sunday) {
+                // Weekday חנוכה is returned later to catch נץ
+				yield return new ScheduleValue("שחרית", Time(8, 00, AM));
 			} else if ((Date - 1) == GetSelichosStart(Date.HebrewYear)) {
 				yield return new ScheduleValue("סליחות", Time(1, 00, AM), true);
 				yield return new ScheduleValue("שחרית", Time(8, 00, AM));
@@ -252,8 +252,8 @@ namespace ShomreiTorah.Schedules {
 				var shacharis = GetWeekdayשחרית(out isשחריתBold);
 				var selichosOffset = GetסליחותOffset();
 
-			if (shacharis >= Zmanim.Sunrise - TimeSpan.FromMinutes(30) && shacharis <= Zmanim.Sunrise - TimeSpan.FromMinutes(23))
-				yield return new ScheduleValue("נץ", Zmanim.Sunrise);
+			    if (shacharis >= Zmanim.Sunrise - TimeSpan.FromMinutes(30) && shacharis <= Zmanim.Sunrise - TimeSpan.FromMinutes(23))
+				    yield return new ScheduleValue("נץ", Zmanim.Sunrise);
 
 				if (selichosOffset.HasValue)
 					yield return new ScheduleValue("סליחות", shacharis - selichosOffset.Value, true);
