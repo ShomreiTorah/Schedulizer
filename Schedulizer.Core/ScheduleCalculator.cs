@@ -246,12 +246,14 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("שחרית", Time(8, 00, AM));
 				else {
 					yield return new ScheduleValue("שחרית", Time(7, 45, AM));
+					if (Date >= new DateTime(2013, 11, 10))
+						yield return new ScheduleValue("סדר לימוד", Time(9, 00, AM));
 				}
 			} else {
 				var shacharis = GetWeekdayשחרית(out isשחריתBold);
 				var selichosOffset = GetסליחותOffset();
 
-				if (shacharis >= Zmanim.Sunrise - TimeSpan.FromMinutes(30) && shacharis <= Zmanim.Sunrise - TimeSpan.FromMinutes(23))
+				if (shacharis >= Zmanim.Sunrise - TimeSpan.FromMinutes(28) && shacharis <= Zmanim.Sunrise - TimeSpan.FromMinutes(22))
 					yield return new ScheduleValue("נץ", Zmanim.Sunrise);
 
 				if (selichosOffset.HasValue)
