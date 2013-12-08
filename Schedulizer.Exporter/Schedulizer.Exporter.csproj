@@ -65,9 +65,11 @@
   <ItemGroup>
     <Reference Include="Microsoft.Office.Interop.PowerPoint.Extensions">
       <HintPath>..\packages\Microsoft.Office.Interop.PowerPoint.Extensions.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Word.Extensions">
       <HintPath>..\packages\Microsoft.Office.Interop.Word.Extensions.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -88,10 +90,12 @@
     <ProjectReference Include="..\..\..\Libraries\ShomreiTorah.Common\ShomreiTorah.Common.csproj">
       <Project>{1308A6E1-7787-49F6-A19C-8AF327DAF9B5}</Project>
       <Name>ShomreiTorah.Common</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Schedulizer.Core\Schedulizer.Core.csproj">
       <Project>{A111D4E1-561F-405F-8FA4-6111A1D329B3}</Project>
       <Name>Schedulizer.Core</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
