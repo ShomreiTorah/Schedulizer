@@ -18,7 +18,9 @@ namespace ShomreiTorah.Schedules {
 		readonly bool shouldCloseConnection;
 		CellDictionary loadedCells;
 
-		public ScheduleContext(DBConnector database) : this(CreateEntityConnection(database)) { shouldCloseConnection = true; }
+		public DBConnector DB { get; private set; }
+
+		public ScheduleContext(DBConnector database) : this(CreateEntityConnection(database)) { shouldCloseConnection = true; DB = database; }
 
 		partial void OnContextCreated() {
 			_CellSet = CellSet.Include("Times");
@@ -54,7 +56,7 @@ namespace ShomreiTorah.Schedules {
 			workspace.RegisterItemCollection(msl);
 
 			var connection = database.OpenConnection();
-			connection.Close();	//EntityConnection requires that the connection be closed
+			connection.Close(); //EntityConnection requires that the connection be closed
 			return new EntityConnection(workspace, connection);
 		}
 
@@ -121,11 +123,11 @@ namespace ShomreiTorah.Schedules {
 			for (to = to.Date; to >= from; to = to.AddDays(-1)) {
 				if (!IsLoaded(to)) break;
 			}
-			if (from > to) return;		//Everything is already loaded
+			if (from > to) return;      //Everything is already loaded
 
 			var newCells = CellSet
 				.Where(c => c.EnglishDate >= from && c.EnglishDate <= to)
-				.AsEnumerable()	//LINQ to Entities cannot handle Except(IComparer)
+				.AsEnumerable() //LINQ to Entities cannot handle Except(IComparer)
 				.Except(loadedCells, cellDateComparer)
 				.ToArray();
 
@@ -189,7 +191,7 @@ namespace ShomreiTorah.Schedules {
 			if (calc == null) throw new ArgumentNullException("calc");
 
 			var newTitle = calc.CalcTitle();
-			if (Title != newTitle)	//Believe it or not, the setter doesn't check this
+			if (Title != newTitle)  //Believe it or not, the setter doesn't check this
 				Title = newTitle;
 
 			//foreach (var time in Times.ToArray())
@@ -270,7 +272,7 @@ namespace ShomreiTorah.Schedules {
 	public sealed partial class ScheduleTime {
 		public ScheduleTime() {
 			Id = Guid.NewGuid();
-			SqlTime = DateTime.Now;	//Bugfix; otherwise, when times are added by the grid, they default to 1/1/0001, which doesn't fit in SQL Server
+			SqlTime = DateTime.Now; //Bugfix; otherwise, when times are added by the grid, they default to 1/1/0001, which doesn't fit in SQL Server
 		}
 		public ScheduleTime(ScheduleCell cell, string name, TimeSpan time, bool isBold) : this() { Cell = cell; Name = name; Time = time; IsBold = isBold; }
 

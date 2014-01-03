@@ -182,6 +182,10 @@
     <Content Include="Schedulizer.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Libraries\ShomreiTorah.Administration\ShomreiTorah.Administration.csproj">
+      <Project>{c3f42838-56d1-49f4-a8ca-11242ecb76e1}</Project>
+      <Name>ShomreiTorah.Administration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Libraries\ShomreiTorah.Common\ShomreiTorah.Common.csproj">
       <Project>{1308a6e1-7787-49f6-a19c-8af327daf9b5}</Project>
       <Name>ShomreiTorah.Common</Name>

@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.Word;
 using Microsoft.Office.Interop.Word.Extensions;
+using ShomreiTorah.Administration;
 using ShomreiTorah.Common;
 using ShomreiTorah.Common.Calendar;
 using ShomreiTorah.Common.Calendar.Holidays;
@@ -94,7 +95,7 @@ namespace ShomreiTorah.Schedules.Export {
 		///<remarks>If this proeprty is false, the Word document should be updated manually using the UpdateDirtyCells method.</remarks>
 		public bool AutoUpdate { get; set; }
 		public void UpdateDirtyCells() {
-			var dirtyCopy = dirtyCells.ToArray();	//Make a copy to enumerate over
+			var dirtyCopy = dirtyCells.ToArray();   //Make a copy to enumerate over
 
 			PerformOperation(ui => {
 				ui.Maximum = dirtyCopy.Length;
@@ -103,7 +104,7 @@ namespace ShomreiTorah.Schedules.Export {
 					ui.Caption = "Updating " + cell.EnglishDate.ToLongDateString();
 
 					UpdateTitle(cell);
-					UpdateTimes(cell);	//This removes it from dirtyCells
+					UpdateTimes(cell);  //This removes it from dirtyCells
 					ui.Progress++;
 
 					if (ui.WasCanceled)
@@ -157,8 +158,8 @@ namespace ShomreiTorah.Schedules.Export {
 		}
 		static string FixTitle(string title) {
 			if (string.IsNullOrEmpty(title))
-				return " ";	//Suppress the content control's default value prompt.
-			return title.Replace("\r", "").Replace('\n', '\v');	//Replace newlines with soft newlines that can go in a content control.  (Avoids document corruption)
+				return " "; //Suppress the content control's default value prompt.
+			return title.Replace("\r", "").Replace('\n', '\v'); //Replace newlines with soft newlines that can go in a content control.  (Avoids document corruption)
 		}
 		public void UpdateTitle(ScheduleCell cell) {
 			if (!Contains(cell.EnglishDate)) return;
@@ -193,6 +194,7 @@ namespace ShomreiTorah.Schedules.Export {
 			if (title.Count == 1)
 				title.Item(1).Range.Text = startDate.AddDays((7 * weeks) / 2).ToString(@"MMMM \'yy", Culture);
 			retVal.WeekCount = weeks;
+			retVal.UpdateSponsor();
 
 			return retVal;
 		}
@@ -210,6 +212,18 @@ namespace ShomreiTorah.Schedules.Export {
 			var retVal = new WordBinder(ui, context, document, xml) { weekCount = table.Rows.Count - 1 };
 
 			return retVal;
+		}
+
+		public void UpdateSponsor() {
+			var control = Document.SelectContentControlsByTag("Sponsor");
+			if (control.Count != 1) return;
+			var sponsors = SponsorshipInfo.Forנרלמאור(Context.DB, StartDate.AddDays((7 * WeekCount) / 2));
+			string text;
+			if (!sponsors.Any())
+				text = "Your name here";
+			else
+				text = sponsors[0].Message + " " + sponsors[0].FullName;
+			control.Item(1).Range.Text = text;
 		}
 
 		[SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "COM Interface")]
@@ -248,7 +262,7 @@ namespace ShomreiTorah.Schedules.Export {
 								for (int c = 0; c < 7; c++)
 									dirtyCells.Remove(Context.GetCell(StartDate + 7 * w + c));
 
-								ScheduleTable.Rows[w + 1].Delete();	//Indexer is one-based.
+								ScheduleTable.Rows[w + 1].Delete(); //Indexer is one-based.
 								weekCount = w - 1;
 								if (ui.WasCanceled) break;
 							}
@@ -263,7 +277,7 @@ namespace ShomreiTorah.Schedules.Export {
 										ui.Progress++;
 										ui.Caption = String.Format(CultureInfo.CurrentCulture, "Creating {0:D}", date.EnglishDate);
 
-										ResetCell(row.Cells[c + 1], date);	 //Indexer is one-based.
+										ResetCell(row.Cells[c + 1], date);   //Indexer is one-based.
 										//Don't stop in this loop as it would
 										//leave us in an  inconsistent state.
 									}
@@ -282,7 +296,7 @@ namespace ShomreiTorah.Schedules.Export {
 									Document.Range().Offset(-1).Select();
 									for (int w = old; w < WeekCount; w++) {
 										var row = ScheduleTable.Rows[w + 2];
-										for (int c = 0; c < 6; c++) {	//Skip שבת
+										for (int c = 0; c < 6; c++) {   //Skip שבת
 											var date = StartDate + (7 * w + c);
 
 											if (date.Info.Is(HolidayCategory.דרבנן, HolidayCategory.חולהמועד, HolidayCategory.תענית)) {
