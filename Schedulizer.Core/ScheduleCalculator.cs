@@ -446,7 +446,7 @@ namespace ShomreiTorah.Schedules {
 			if (dafYomi == דףיומיType.NightAlone)
 				yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
 			else if (dafYomi == דףיומיType.WeekNight) {
-				var hasמשנהברורה = Date.EnglishDate.Year >= 2013 
+				var hasמשנהברורה = Date.EnglishDate.Year == 2013 
 				 && (Date >= Holiday.סוכות.Days.Last().Date.GetDate(Date.HebrewYear) || Date <= new DateTime(Date.EnglishDate.Year, 6, 25));
 
 				if (DayOfWeek == DayOfWeek.Sunday || (Zmanim.Sunset > Time(7, 18, PM) && Date <= new DateTime(2012, 09, 03))) {
