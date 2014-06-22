@@ -24,6 +24,7 @@ namespace ShomreiTorah.Schedules {
 		public DayOfWeek DayOfWeek { get { return Date.DayOfWeek; } }
 		public HolidayCategory HolidayCategory { get { return Holiday == null ? HolidayCategory.None : Holiday.Category; } }
 		public string HolidayName { get { return Holiday == null ? null : Holiday.Name; } }
+		DateTime SummerStart { get { return new DateTime(Date.EnglishDate.Year, 7, 1).Last(DayOfWeek.Saturday); } }
 
 
 		public virtual string CalcTitle() {
@@ -59,6 +60,9 @@ namespace ShomreiTorah.Schedules {
 				retVal.AppendLine("Daylight Saving Time Ends");
 			if (!Date.EnglishDate.IsDaylightSavingTime() && Date.EnglishDate.AddHours(6).IsDaylightSavingTime())
 				retVal.AppendLine("Daylight Saving Time Begins");
+
+			if (Date == SummerStart)
+				retVal.AppendLine("No סעדה שלישית");
 
 			return retVal.ToString().Trim();
 		}
@@ -186,7 +190,7 @@ namespace ShomreiTorah.Schedules {
 
 			#region שחרית
 			bool isשחריתBold;
-			
+
 			if (Holiday.Is(Holiday.ראש٠השנה)) {
 				yield return new ScheduleValue("שחרית", Time(7, 45, AM), true);
 				yield return new ScheduleValue("קידוש", Time(11, 00, AM));
@@ -320,6 +324,9 @@ namespace ShomreiTorah.Schedules {
 				else if (HolidayCategory == HolidayCategory.חולהמועד) {	//שבת חול המועד מנחה is early to allow for סעודה שלישית.
 					actualמנחה -= TimeSpan.FromMinutes(15);
 					isמנחהBold = true;
+				} else if (Date >= SummerStart && actualמנחה > Time(8, 00, PM)) {
+					actualמנחה = Time(7, 30, PM);
+					isמנחהBold = Date == SummerStart;
 				}
 				#endregion
 
@@ -446,7 +453,7 @@ namespace ShomreiTorah.Schedules {
 			if (dafYomi == דףיומיType.NightAlone)
 				yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
 			else if (dafYomi == דףיומיType.WeekNight) {
-				var hasמשנהברורה = Date.EnglishDate.Year == 2013 
+				var hasמשנהברורה = Date.EnglishDate.Year == 2013
 				 && (Date >= Holiday.סוכות.Days.Last().Date.GetDate(Date.HebrewYear) || Date <= new DateTime(Date.EnglishDate.Year, 6, 25));
 
 				if (DayOfWeek == DayOfWeek.Sunday || (Zmanim.Sunset > Time(7, 18, PM) && Date <= new DateTime(2012, 09, 03))) {
