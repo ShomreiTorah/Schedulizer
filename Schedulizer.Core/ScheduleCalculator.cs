@@ -24,7 +24,9 @@ namespace ShomreiTorah.Schedules {
 		public DayOfWeek DayOfWeek { get { return Date.DayOfWeek; } }
 		public HolidayCategory HolidayCategory { get { return Holiday == null ? HolidayCategory.None : Holiday.Category; } }
 		public string HolidayName { get { return Holiday == null ? null : Holiday.Name; } }
+
 		DateTime SummerStart { get { return new DateTime(Date.EnglishDate.Year, 7, 1).Last(DayOfWeek.Saturday); } }
+		DateTime LaborDay { get { return new DateTime(Date.EnglishDate.Year, 9, 1).Next(DayOfWeek.Monday); } }
 
 
 		public virtual string CalcTitle() {
@@ -63,6 +65,8 @@ namespace ShomreiTorah.Schedules {
 
 			if (Date == SummerStart)
 				retVal.AppendLine("No סעדה שלישית");
+			if (Date == LaborDay.Last(DayOfWeek.Saturday))
+				retVal.AppendLine("סעדה שלישית Resumes");
 
 			return retVal.ToString().Trim();
 		}
@@ -179,14 +183,14 @@ namespace ShomreiTorah.Schedules {
 				dafYomi = דףיומיType.NightAlone;
 			else if (Holiday.Is(Holiday.סוכות.Days[5]))	//Special דף יומי on משנה תורה; handled elsewhere
 				dafYomi = דףיומיType.None;
+			else if (Date >= SummerStart && Date <= LaborDay)
+				dafYomi = דףיומיType.NightAlone;
 			else
 				dafYomi = דףיומיType.WeekNight;
 
 			//TODO: שובה
 			if (dafYomi == דףיומיType.Beforeשחרית)
 				yield return new ScheduleValue(dafYomiString, Time(7, 30, AM));
-
-			var laborDay = new DateTime(Date.EnglishDate.Year, 9, 1).Next(DayOfWeek.Monday);
 
 			#region שחרית
 			bool isשחריתBold;
@@ -239,16 +243,15 @@ namespace ShomreiTorah.Schedules {
 			} else if ((Date - 1) == GetSelichosStart(Date.HebrewYear)) {
 				yield return new ScheduleValue("סליחות", Time(1, 00, AM), true);
 				yield return new ScheduleValue("שחרית", Time(8, 00, AM));
-			} else if (Date == laborDay || DayOfWeek == DayOfWeek.Sunday) {
+			} else if (Date == LaborDay || DayOfWeek == DayOfWeek.Sunday) {
 
 				var selichosOffset = GetסליחותOffset();
 				if (selichosOffset.HasValue) {
 					yield return new ScheduleValue("סליחות", Time(8, 00, AM) - selichosOffset.Value, true);
 					yield return new ScheduleValue("שחרית", Time(8, 00, AM));
-				} else if (Date >= new DateTime(Date.EnglishDate.Year, 6, 25)	//During the summer, we only have one שחרית
-					 && Date <= laborDay)
+				} else if (Date >= SummerStart && Date <= LaborDay) {
 					yield return new ScheduleValue("שחרית", Time(8, 00, AM));
-				else {
+				} else {
 					yield return new ScheduleValue("שחרית", Time(7, 45, AM));
 					if (Date >= new DateTime(2013, 11, 10))
 						yield return new ScheduleValue("סדר לימוד", Time(9, 00, AM));
@@ -324,8 +327,16 @@ namespace ShomreiTorah.Schedules {
 				else if (HolidayCategory == HolidayCategory.חולהמועד) {	//שבת חול המועד מנחה is early to allow for סעודה שלישית.
 					actualמנחה -= TimeSpan.FromMinutes(15);
 					isמנחהBold = true;
-				} else if (Date >= SummerStart && actualמנחה > Time(8, 00, PM)) {
-					actualמנחה = Time(7, 30, PM);
+				} else if (Date >= SummerStart && Date < LaborDay.Last(DayOfWeek.Saturday)) {
+					// During the summer time, until the שבת before Labor Day (Labor
+					// Day weekend), there is no סעודה שלישית, we have מנחה early.
+					if (actualמנחה > Time(7, 50, PM))
+						actualמנחה = Time(7, 30, PM);
+					else if (actualמנחה > Time(7, 30, PM))
+						actualמנחה = Time(7, 00, PM);
+					else
+						actualמנחה = Time(6, 45, PM);
+
 					isמנחהBold = Date == SummerStart;
 				}
 				#endregion
@@ -356,18 +367,25 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("נעילה", actualמנחה + TimeSpan.FromMinutes(90));
 
 
-				if (!Isיוםטוב || DayOfWeek != DayOfWeek.Friday) {	//On יום טוב ערב שבת, we have מעריב right after מנחה.
+				TimeSpan? maariv = null;
+				if (DayOfWeek != DayOfWeek.Friday) {				//On יום טוב ערב שבת, we have מעריב right after מנחה.
 					if (Holiday.Is(Holiday.ראש٠השנה.Days.First()))	//ראש השנה מעריב is longer, so we start 10 minutes earlier.
-						yield return new ScheduleValue("מעריב", defaultמנחה + TimeSpan.FromMinutes(70));
+						maariv = defaultמנחה + TimeSpan.FromMinutes(70);
 					else if (Isיוםטוב && !(Date + 1).Info.Isשבתיוםטוב)	//Because we don't say ויהי נועם, we daven מעריב five minutes later.
-						yield return new ScheduleValue("מעריב", defaultמנחה + TimeSpan.FromMinutes(85));
+						maariv = defaultמנחה + TimeSpan.FromMinutes(85);
 					else if (Isיוםטוב)
-						yield return new ScheduleValue("מעריב", (Zmanim.Sunset + TimeSpan.FromMinutes(54)).RoundDown());
+						maariv = (Zmanim.Sunset + TimeSpan.FromMinutes(54)).RoundDown();
 					else
-						yield return new ScheduleValue("מעריב", defaultמנחה + TimeSpan.FromMinutes(80));
+						maariv = defaultמנחה + TimeSpan.FromMinutes(80);
+					if (Holiday.Is(Holiday.פסח[1]) || Holiday.Is(Holiday.פסח[2]))
+						maariv -= TimeSpan.FromMinutes(10);			// מעריב on סדר night starts early due to הלל
 				}
-				if (Holiday.Is(Holiday.סוכות.Days[7]))			//הקפות are 20 minutes after מעריב
-					yield return new ScheduleValue("הקפות", defaultמנחה + TimeSpan.FromMinutes(100));
+				if (Holiday.Is(Holiday.סוכות.Days[7])) {
+					maariv += TimeSpan.FromMinutes(10);		// No clue why
+					yield return new ScheduleValue("הקפות", maariv.Value + TimeSpan.FromMinutes(15));
+				}
+				if (maariv != null)
+					yield return new ScheduleValue("מעריב", maariv.Value);
 
 				if ((Date + 1).Info.Is(Holiday.פורים)) {	//10 minute delay for women to come to Shul
 					yield return new ScheduleValue("מגילה", defaultמנחה + TimeSpan.FromMinutes(95 + 10));
@@ -402,7 +420,18 @@ namespace ShomreiTorah.Schedules {
 						else if (Zmanim.Sunset < Time(5, 40, PM))
 							yield return new ScheduleValue("חומש שיעור", Time(8, 30, PM), true);
 					}
+					if ((Date + 1).Info.Is(HolidayCategory.דאריתא) && DayOfWeek != DayOfWeek.Friday) {
+						var maariv = normalמנחה + TimeSpan.FromMinutes(65);
+						if ((Date + 1).Info.Is(Holiday.ראש٠השנה))
+							maariv = normalמנחה + TimeSpan.FromMinutes(50);
+						else if ((Date + 1).Info.Is(Holiday.פסח.Days.First()))
+							maariv -= TimeSpan.FromMinutes(10);			// מעריב on סדר night starts early due to הלל
+						yield return new ScheduleValue("מעריב", maariv);
+						if (Holiday.Is(Holiday.סוכות.Days[6]))
+							yield return new ScheduleValue("הקפות", maariv + TimeSpan.FromMinutes(15));
+					}
 				}
+
 			} else if (Holiday.Is(Holiday.פורים)) {//And not Friday
 				yield return new ScheduleValue("מנחה", Time(3, 00, PM));
 				//yield return new ScheduleValue("מעריב", Time(9, 00, PM));
@@ -450,11 +479,11 @@ namespace ShomreiTorah.Schedules {
 			if (hasLateCandleLighting) {
 				yield return new ScheduleValue("Candle Lighting", Zmanim.Sunset + TimeSpan.FromMinutes(72));
 			}
-			if (dafYomi == דףיומיType.NightAlone)
+			if (dafYomi == דףיומיType.NightAlone) {
 				yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
-			else if (dafYomi == דףיומיType.WeekNight) {
-				var hasמשנהברורה = Date.EnglishDate.Year == 2013
-				 && (Date >= Holiday.סוכות.Days.Last().Date.GetDate(Date.HebrewYear) || Date <= new DateTime(Date.EnglishDate.Year, 6, 25));
+			} else if (dafYomi == דףיומיType.WeekNight) {
+				var hasמשנהברורה = Date.EnglishDate.Year >= 2013
+				 && Date > LaborDay || Date <= SummerStart;
 
 				if (DayOfWeek == DayOfWeek.Sunday || (Zmanim.Sunset > Time(7, 18, PM) && Date <= new DateTime(2012, 09, 03))) {
 					#region מנחה־מעריב
@@ -478,7 +507,7 @@ namespace ShomreiTorah.Schedules {
 					//Non-summer
 					if (Date >= new DateTime(2012, 12, 17)) {
 						if (hasמשנהברורה)
-							yield return new ScheduleValue("משנה ברורה", Time(8, 40, PM));
+							yield return new ScheduleValue("משנה ברורה", Time(8, 45, PM));
 						yield return new ScheduleValue(dafYomiString, Time(9, 15, PM));
 						yield return new ScheduleValue("מעריב", Time(9, 00, PM));
 					} else {
