@@ -394,44 +394,41 @@ namespace ShomreiTorah.Schedules {
 				}
 				#endregion
 				//TODO: שמחת בית השואבה
+			} else if ((Date + 1).Info.Is(Holiday.יום٠כיפור)) {
+				yield return new ScheduleValue("מנחה", Time(3, 00, PM));
+
+				var kolNidrei = GetDefaultערב٠שבת٠מנחה(Date);
+
+				yield return new ScheduleValue("תפילה זכה", kolNidrei - TimeSpan.FromMinutes(10));
+				yield return new ScheduleValue("כל נדרי", kolNidrei);
+			} else if ((Date + 1).Info.Isשבתיוםטוב) {
+				if ((Date + 1).Info.Is(Holiday.חנוכה))
+					yield return new ScheduleValue("מנחה", Time(3, 00, PM));
+				//no else; ערב שבת חנוכה has two מנחהs
+				yield return new ScheduleValue("מנחה", normalמנחה);
+
+				if (!(Date + 1).Info.Is(Holiday.חנוכה)) {
+					if (Zmanim.Sunset < Time(5, 05, PM))
+						yield return new ScheduleValue("חומש שיעור", Time(8, 00, PM));
+					else if (Zmanim.Sunset < Time(5, 15, PM))
+						yield return new ScheduleValue("חומש שיעור", Time(8, 15, PM), true);
+					else if (Zmanim.Sunset < Time(5, 40, PM))
+						yield return new ScheduleValue("חומש שיעור", Time(8, 30, PM), true);
+				}
+				if ((Date + 1).Info.Is(HolidayCategory.דאריתא) && DayOfWeek != DayOfWeek.Friday) {
+					var maariv = normalמנחה + TimeSpan.FromMinutes(65);
+					if ((Date + 1).Info.Is(Holiday.ראש٠השנה))
+						maariv = normalמנחה + TimeSpan.FromMinutes(50);
+					else if ((Date + 1).Info.Is(Holiday.פסח.Days.First()))
+						maariv -= TimeSpan.FromMinutes(10);			// מעריב on סדר night starts early due to הלל
+					yield return new ScheduleValue("מעריב", maariv);
+					if (Holiday.Is(Holiday.סוכות.Days[6]))
+						yield return new ScheduleValue("הקפות", maariv + TimeSpan.FromMinutes(15));
+				}
 			} else if (Holiday.Is(Holiday.סוכות.Days[5])) {
 				yield return new ScheduleValue(dafYomiString, Time(8, 00, PM));
 				yield return new ScheduleValue("מעריב", Time(9, 00, PM));
 				yield return new ScheduleValue("משנה תורה", Time(9, 15, PM));
-			} else if ((Date + 1).Info.Isשבתיוםטוב) {
-				if ((Date + 1).Info.Is(Holiday.יום٠כיפור)) {
-					yield return new ScheduleValue("מנחה", Time(3, 00, PM));
-
-					var kolNidrei = GetDefaultערב٠שבת٠מנחה(Date);
-
-					yield return new ScheduleValue("תפילה זכה", kolNidrei - TimeSpan.FromMinutes(10));
-					yield return new ScheduleValue("כל נדרי", kolNidrei);
-				} else {
-					if ((Date + 1).Info.Is(Holiday.חנוכה))
-						yield return new ScheduleValue("מנחה", Time(3, 00, PM));
-					//no else; ערב שבת חנוכה has two מנחהs
-					yield return new ScheduleValue("מנחה", normalמנחה);
-
-					if (!(Date + 1).Info.Is(Holiday.חנוכה)) {
-						if (Zmanim.Sunset < Time(5, 05, PM))
-							yield return new ScheduleValue("חומש שיעור", Time(8, 00, PM));
-						else if (Zmanim.Sunset < Time(5, 15, PM))
-							yield return new ScheduleValue("חומש שיעור", Time(8, 15, PM), true);
-						else if (Zmanim.Sunset < Time(5, 40, PM))
-							yield return new ScheduleValue("חומש שיעור", Time(8, 30, PM), true);
-					}
-					if ((Date + 1).Info.Is(HolidayCategory.דאריתא) && DayOfWeek != DayOfWeek.Friday) {
-						var maariv = normalמנחה + TimeSpan.FromMinutes(65);
-						if ((Date + 1).Info.Is(Holiday.ראש٠השנה))
-							maariv = normalמנחה + TimeSpan.FromMinutes(50);
-						else if ((Date + 1).Info.Is(Holiday.פסח.Days.First()))
-							maariv -= TimeSpan.FromMinutes(10);			// מעריב on סדר night starts early due to הלל
-						yield return new ScheduleValue("מעריב", maariv);
-						if (Holiday.Is(Holiday.סוכות.Days[6]))
-							yield return new ScheduleValue("הקפות", maariv + TimeSpan.FromMinutes(15));
-					}
-				}
-
 			} else if (Holiday.Is(Holiday.פורים)) {//And not Friday
 				yield return new ScheduleValue("מנחה", Time(3, 00, PM));
 				//yield return new ScheduleValue("מעריב", Time(9, 00, PM));
