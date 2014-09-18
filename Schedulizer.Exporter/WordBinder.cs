@@ -95,7 +95,7 @@ namespace ShomreiTorah.Schedules.Export {
 		///<remarks>If this proeprty is false, the Word document should be updated manually using the UpdateDirtyCells method.</remarks>
 		public bool AutoUpdate { get; set; }
 		public void UpdateDirtyCells() {
-			var dirtyCopy = dirtyCells.ToArray();   //Make a copy to enumerate over
+			var dirtyCopy = dirtyCells.ToArray();	//Make a copy to enumerate over
 
 			PerformOperation(ui => {
 				ui.Maximum = dirtyCopy.Length;
@@ -104,7 +104,7 @@ namespace ShomreiTorah.Schedules.Export {
 					ui.Caption = "Updating " + cell.EnglishDate.ToLongDateString();
 
 					UpdateTitle(cell);
-					UpdateTimes(cell);  //This removes it from dirtyCells
+					UpdateTimes(cell);	//This removes it from dirtyCells
 					ui.Progress++;
 
 					if (ui.WasCanceled)
@@ -126,7 +126,7 @@ namespace ShomreiTorah.Schedules.Export {
 		}
 
 		void Times_ListChanged(object sender, ListChangedEventArgs e) {
-			if (e.ListChangedType == ListChangedType.ItemDeleted) return;   //I can't get the deleted item, so there's nothing I can do here.
+			if (e.ListChangedType == ListChangedType.ItemDeleted) return;	//I can't get the deleted item, so there's nothing I can do here.
 			var time = timesBindingList[e.NewIndex] as ScheduleTime;
 
 			if (!Document.Bookmarks.Exists(time.Cell.ValuesTag()))
@@ -158,8 +158,8 @@ namespace ShomreiTorah.Schedules.Export {
 		}
 		static string FixTitle(string title) {
 			if (string.IsNullOrEmpty(title))
-				return " "; //Suppress the content control's default value prompt.
-			return title.Replace("\r", "").Replace('\n', '\v'); //Replace newlines with soft newlines that can go in a content control.  (Avoids document corruption)
+				return " ";	//Suppress the content control's default value prompt.
+			return title.Replace("\r", "").Replace('\n', '\v');	//Replace newlines with soft newlines that can go in a content control.  (Avoids document corruption)
 		}
 		public void UpdateTitle(ScheduleCell cell) {
 			if (!Contains(cell.EnglishDate)) return;
@@ -176,7 +176,8 @@ namespace ShomreiTorah.Schedules.Export {
 					Word.ScreenUpdating = false;
 					UpdateTimes(cell, Document.Bookmarks.Item(cell.ValuesTag()).Range);
 				} finally { Word.ScreenUpdating = true; }
-			} else
+			}
+			else
 				dirtyCells.Remove(cell);	//If the cell had a bookmark, this was done by UpdateTimes
 		}
 
@@ -262,11 +263,12 @@ namespace ShomreiTorah.Schedules.Export {
 								for (int c = 0; c < 7; c++)
 									dirtyCells.Remove(Context.GetCell(StartDate + 7 * w + c));
 
-								ScheduleTable.Rows[w + 1].Delete(); //Indexer is one-based.
+								ScheduleTable.Rows[w + 1].Delete();	//Indexer is one-based.
 								weekCount = w - 1;
 								if (ui.WasCanceled) break;
 							}
-						} else {
+						}
+						else {
 							ui.Maximum = (value - WeekCount) * 7;
 							try {
 								for (int w = WeekCount; w < value; w++) {
@@ -277,9 +279,9 @@ namespace ShomreiTorah.Schedules.Export {
 										ui.Progress++;
 										ui.Caption = String.Format(CultureInfo.CurrentCulture, "Creating {0:D}", date.EnglishDate);
 
-										ResetCell(row.Cells[c + 1], date);   //Indexer is one-based.
-										//Don't stop in this loop as it would
-										//leave us in an  inconsistent state.
+										ResetCell(row.Cells[c + 1], date);	 //Indexer is one-based.
+																			 //Don't stop in this loop as it would
+																			 //leave us in an  inconsistent state.
 									}
 									weekCount = w + 1;
 									if (ui.WasCanceled) break;
@@ -296,14 +298,15 @@ namespace ShomreiTorah.Schedules.Export {
 									Document.Range().Offset(-1).Select();
 									for (int w = old; w < WeekCount; w++) {
 										var row = ScheduleTable.Rows[w + 2];
-										for (int c = 0; c < 6; c++) {   //Skip שבת
+										for (int c = 0; c < 6; c++) {	//Skip שבת
 											var date = StartDate + (7 * w + c);
 
 											if (date.Info.Is(HolidayCategory.דרבנן, HolidayCategory.חולהמועד, HolidayCategory.תענית)) {
 												var cell = row.Cells[c + 1];
 												var titleControl = cell.Range.ContentControls[1];
 												titleControl.Range.Font.TextColor.SetFrom(שבתStyle.Font.TextColor);
-											} else if (date.Info.Is(HolidayCategory.דאריתא)) {
+											}
+											else if (date.Info.Is(HolidayCategory.דאריתא)) {
 												var cell = row.Cells[c + 1];
 
 												cell.Shading.Texture = שבתStyle.Shading.Texture;
@@ -353,9 +356,9 @@ namespace ShomreiTorah.Schedules.Export {
 							   group t by t.Name into g
 							   orderby g.First().Time
 							   select new {
-								   Name = g.Key,
-								   Value = g.OrderByDescending(t => t.Time).Select(t => t.TimeString).Join(", "),
-								   IsBold = g.Any(t => t.IsBold),
+				Name = g.Key,
+				Value = g.OrderByDescending(t => t.Time).Select(t => t.TimeString).Join(", "),
+				IsBold = g.Any(t => t.IsBold),
 							   };
 
 			range.Text = "";
@@ -380,14 +383,27 @@ namespace ShomreiTorah.Schedules.Export {
 			var weekStart = scheduleCell.Date.Last(DayOfWeek.Sunday);
 			var weekCells = Enumerable.Range(0, 7).Select(i => weekStart + i)
 												  .Select(d => scheduleCell.Context.GetCell(d));
-			var maxLines = weekCells.Max(c => c.LinesUsed());
+			var maxLines = Math.Max(7, weekCells.Max(c => c.LinesUsed()));
 			var ourLines = scheduleCell.LinesUsed();
 
 			//Where it'll fit, I put in דף יומי
 			if (ourLines < Math.Max(maxLines, 7)) {
-				range.Offset(0).InsertParagraph();
-				range.End++;
+				// Keep the Daf on the bottom of each cell
+				for (int i = ourLines; i < maxLines; i++) {
+					range.Offset(0).InsertParagraph();
+					range.End++;
+				}
+				// If there is right-aligned text after it, we need to forcefully center the דף.
+				if (scheduleCell.Date.Info.OmerDay > 0) {
+					range.Offset(0).InsertAlignmentTab(WdAlignmentTabAlignment.wdCenter);
+					range.End++;
+				}
 				range.AppendText(scheduleCell.Date.Info.DafYomiString, "Daf");
+				if (scheduleCell.Date.Info.OmerDay > 0) {
+					range.Offset(0).InsertAlignmentTab(WdAlignmentTabAlignment.wdRight);
+					range.End++;
+					range.AppendText(scheduleCell.Date.Info.OmerDay.ToString(Culture), "Omer");
+				}
 			}
 
 			range.Bookmarks.Add(scheduleCell.ValuesTag());
