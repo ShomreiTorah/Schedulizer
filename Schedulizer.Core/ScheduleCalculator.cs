@@ -68,6 +68,14 @@ namespace ShomreiTorah.Schedules {
 			if (Date == LaborDay.Last(DayOfWeek.Saturday))
 				retVal.AppendLine("סעדה שלישית Resumes");
 
+			if (Holiday.Is(Holiday.סוכות)
+				&& HolidayCategory == HolidayCategory.חולהמועד
+				&& !(Date + 1).Info.Is(HolidayCategory.דאריתא)
+				&& !Date.Info.Is(Holiday.סוכות.Days[5])
+				&& (DayOfWeek == DayOfWeek.Monday || DayOfWeek == DayOfWeek.Thursday))
+				retVal.AppendLine("At the Rav's סוכה");
+
+
 			return retVal.ToString().Trim();
 		}
 
@@ -181,8 +189,6 @@ namespace ShomreiTorah.Schedules {
 				dafYomi = דףיומיType.None;
 			else if (HolidayCategory == HolidayCategory.תענית)
 				dafYomi = דףיומיType.NightAlone;
-			else if (Holiday.Is(Holiday.סוכות.Days[5]))	//Special דף יומי on משנה תורה; handled elsewhere
-				dafYomi = דףיומיType.None;
 			else if (Date >= SummerStart && Date <= LaborDay)
 				dafYomi = דףיומיType.NightAlone;
 			else
@@ -387,13 +393,15 @@ namespace ShomreiTorah.Schedules {
 				if (maariv != null)
 					yield return new ScheduleValue("מעריב", maariv.Value);
 
+				if (Holiday.Is(Holiday.סוכות.Days[5]))
+					yield return new ScheduleValue("משנה תורה", maariv.Value + TimeSpan.FromMinutes(80));
+
 				if ((Date + 1).Info.Is(Holiday.פורים)) {	//10 minute delay for women to come to Shul
 					yield return new ScheduleValue("מגילה", defaultמנחה + TimeSpan.FromMinutes(95 + 10));
 					yield return new ScheduleValue("מגילה", defaultמנחה + TimeSpan.FromMinutes(95 + 10 + 90));
 					yield return new ScheduleValue("מסיבה", Time(10, 00, PM));
 				}
 				#endregion
-				//TODO: שמחת בית השואבה
 			} else if ((Date + 1).Info.Is(Holiday.יום٠כיפור)) {
 				yield return new ScheduleValue("מנחה", Time(3, 00, PM));
 
@@ -429,6 +437,12 @@ namespace ShomreiTorah.Schedules {
 				yield return new ScheduleValue(dafYomiString, Time(8, 00, PM));
 				yield return new ScheduleValue("מעריב", Time(9, 00, PM));
 				yield return new ScheduleValue("משנה תורה", Time(9, 15, PM));
+				dafYomi = דףיומיType.None;
+			} else if (Holiday.Is(Holiday.סוכות) && (DayOfWeek == DayOfWeek.Monday || DayOfWeek == DayOfWeek.Thursday)) {	// This must be after the checks for ערב? יום טוב and משנה תורה
+				yield return new ScheduleValue(dafYomiString, Time(8, 00, PM));
+				yield return new ScheduleValue("שמחת בית השואבה", Time(9, 00, PM));
+				yield return new ScheduleValue("מעריב", Time(10, 00, PM));
+				dafYomi = דףיומיType.None;
 			} else if (Holiday.Is(Holiday.פורים)) {//And not Friday
 				yield return new ScheduleValue("מנחה", Time(3, 00, PM));
 				//yield return new ScheduleValue("מעריב", Time(9, 00, PM));
@@ -480,7 +494,8 @@ namespace ShomreiTorah.Schedules {
 				yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
 			} else if (dafYomi == דףיומיType.WeekNight) {
 				var hasמשנהברורה = Date.EnglishDate.Year >= 2013
-				 && Date > LaborDay || Date <= SummerStart;
+				 && (Date > LaborDay || Date <= SummerStart)
+				 && HolidayCategory != HolidayCategory.חולהמועד;
 
 				if (DayOfWeek == DayOfWeek.Sunday || (Zmanim.Sunset > Time(7, 18, PM) && Date <= new DateTime(2012, 09, 03))) {
 					#region מנחה־מעריב
