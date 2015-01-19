@@ -195,8 +195,11 @@ namespace ShomreiTorah.Schedules.Export {
 			if (title.Count == 1)
 				title.Item(1).Range.Text = startDate.AddDays((7 * weeks) / 2).ToString(@"MMMM \'yy", Culture);
 			retVal.WeekCount = weeks;
-			retVal.UpdateSponsor();
-
+			// Ugly hack to execute this after ExecAsync
+			// finishes updating the WeekCount property.
+			retVal.PerformOperation(delegate {
+				retVal.UpdateSponsor();
+			}, false);
 			return retVal;
 		}
 		public static WordBinder BindDocument(ScheduleContext context, Document document, IExportUIProvider ui) {
@@ -221,7 +224,7 @@ namespace ShomreiTorah.Schedules.Export {
 			var sponsors = SponsorshipInfo.Forנרלמאור(Context.DB, StartDate.AddDays((7 * WeekCount) / 2));
 			string text;
 			if (!sponsors.Any())
-				text = "Your name here";
+				text = "TBA";
 			else
 				text = sponsors[0].Message + " " + sponsors[0].FullName;
 			control.Item(1).Range.Text = text;
