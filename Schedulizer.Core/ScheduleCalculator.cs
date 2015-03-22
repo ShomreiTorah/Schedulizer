@@ -266,7 +266,7 @@ namespace ShomreiTorah.Schedules {
 				var shacharis = GetWeekdayשחרית(out isשחריתBold);
 				var selichosOffset = GetסליחותOffset();
 
-				if (shacharis >= Zmanim.Sunrise - TimeSpan.FromMinutes(28) && shacharis <= Zmanim.Sunrise - TimeSpan.FromMinutes(22))
+				if (shacharis >= Zmanim.Sunrise - TimeSpan.FromMinutes(29) && shacharis <= Zmanim.Sunrise - TimeSpan.FromMinutes(22))
 					yield return new ScheduleValue("נץ", Zmanim.Sunrise);
 
 				if (selichosOffset.HasValue)
@@ -448,7 +448,7 @@ namespace ShomreiTorah.Schedules {
 				//yield return new ScheduleValue("מעריב", Time(9, 00, PM));
 				dafYomi = דףיומיType.NightAlone;
 			} else if (HolidayName == "תענית אסתר") {
-				var mincha = (Zmanim.Sunset - TimeSpan.FromMinutes(30)).RoundUp();
+				var mincha = (Zmanim.Sunset - TimeSpan.FromMinutes(30)).RoundDown();
 
 				if (TimeZoneInfo.Local.IsDaylightSavingTime(Date)		//פורים is on Sunday
 					|| (Date + 1).Info.Is(Holiday.פורים)) {				//פורים is on Tuesday, Thursday, or Friday
@@ -459,8 +459,8 @@ namespace ShomreiTorah.Schedules {
 				if ((Date + 1).Info.Is(Holiday.פורים)) {				//פורים is on Tuesday, Thursday, or Friday
 					yield return new ScheduleValue("מגילה", mincha + TimeSpan.FromMinutes(75));
 					yield return new ScheduleValue("מגילה", mincha + TimeSpan.FromMinutes(75 + 90));
-
-					if (TimeZoneInfo.Local.IsDaylightSavingTime(Date))
+					
+					if (TimeZoneInfo.Local.IsDaylightSavingTime(Date) || Date.DayOfWeek != DayOfWeek.Friday)
 						yield return new ScheduleValue("מסיבה", Time(10, 00, PM));
 					else
 						yield return new ScheduleValue("מסיבה", Time(10, 30, PM));
