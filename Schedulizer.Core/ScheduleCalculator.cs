@@ -438,7 +438,8 @@ namespace ShomreiTorah.Schedules {
 						maariv = normalמנחה + TimeSpan.FromMinutes(50);
 					else if ((Date + 1).Info.Is(Holiday.פסח.Days.First()))
 						maariv -= TimeSpan.FromMinutes(10);			// מעריב on סדר night starts early due to הלל
-					yield return new ScheduleValue("מעריב", maariv);
+					if (Holiday != Holiday.פסח[6])
+						yield return new ScheduleValue("מעריב", maariv);
 					if (Holiday.Is(Holiday.סוכות.Days[6]))
 						yield return new ScheduleValue("הקפות", maariv + TimeSpan.FromMinutes(15));
 				}
