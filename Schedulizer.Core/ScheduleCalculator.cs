@@ -14,7 +14,13 @@ namespace ShomreiTorah.Schedules {
 			Date = date;
 			Holiday = Date.Info.Holiday;
 			Zmanim = Date.GetZmanim();
+
+			בדיקה = Holiday.פסח.Days.First().Date.GetDate(Date.HebrewYear) - 2;
+			if (בדיקה.DayOfWeek == DayOfWeek.Friday)
+				בדיקה--;
 		}
+
+		readonly HebrewDate בדיקה;
 
 		public HebrewDate Date { get; private set; }
 		public Holiday Holiday { get; private set; }
@@ -75,6 +81,8 @@ namespace ShomreiTorah.Schedules {
 				&& (DayOfWeek == DayOfWeek.Monday || DayOfWeek == DayOfWeek.Thursday))
 				retVal.AppendLine("At the Rav's סוכה");
 
+			if (Date == בדיקה)
+				retVal.AppendLine("בדיקת חמץ");
 
 			return retVal.ToString().Trim();
 		}
@@ -169,6 +177,7 @@ namespace ShomreiTorah.Schedules {
 		public virtual IEnumerable<ScheduleValue> CalcTimes() {
 			if (HolidayCategory == HolidayCategory.תענית && !Holiday.Is(Holiday.תשעה٠באב))
 				yield return new ScheduleValue("Fast Begins", Zmanim.Sunrise - TimeSpan.FromMinutes(72));
+
 
 			string dafYomiString = "דף יומי";//I wanted to do this, but it doesn't fit in Word.  "דף יומי – " + Date.Info.DafYomiString;
 			דףיומיType dafYomi;
@@ -459,7 +468,7 @@ namespace ShomreiTorah.Schedules {
 				if ((Date + 1).Info.Is(Holiday.פורים)) {				//פורים is on Tuesday, Thursday, or Friday
 					yield return new ScheduleValue("מגילה", mincha + TimeSpan.FromMinutes(75));
 					yield return new ScheduleValue("מגילה", mincha + TimeSpan.FromMinutes(75 + 90));
-					
+
 					if (TimeZoneInfo.Local.IsDaylightSavingTime(Date) || Date.DayOfWeek != DayOfWeek.Friday)
 						yield return new ScheduleValue("מסיבה", Time(10, 00, PM));
 					else
@@ -497,40 +506,22 @@ namespace ShomreiTorah.Schedules {
 				 && (Date > LaborDay || Date <= SummerStart)
 				 && HolidayCategory != HolidayCategory.חולהמועד;
 
-				if (DayOfWeek == DayOfWeek.Sunday || (Zmanim.Sunset > Time(7, 18, PM) && Date <= new DateTime(2012, 09, 03))) {
-					#region מנחה־מעריב
+				if (DayOfWeek == DayOfWeek.Sunday || Date == בדיקה) {
 					yield return new ScheduleValue("מנחה", Zmanim.Sunset - TimeSpan.FromMinutes(15));
 					yield return new ScheduleValue("מעריב", Zmanim.Sunset + TimeSpan.FromMinutes(3));
 
-					if ((Date + 2).Info.Is(Holiday.פסח[1])) {
-						//בדיקת חמץ night has מנחה, but not דף יומי
-					} else if (DayOfWeek == DayOfWeek.Sunday && Zmanim.Sunset <= Time(7, 00, PM) && Date < new DateTime(2013, 1, 20))
-						yield return new ScheduleValue(dafYomiString, Time(7, 00, AM));
-					else
+					//בדיקת חמץ night has מנחה/מעריב, but not דף יומי
+					if (Date != בדיקה)
 						yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
-
-					if (DayOfWeek != DayOfWeek.Sunday
-					 && !(Date + 2).Info.Is(Holiday.פסח[1]))
-						yield return new ScheduleValue("מעריב", Time(10, 00, PM));
-					#endregion
-					if (DayOfWeek == DayOfWeek.Sunday && hasמשנהברורה && Date.HebrewYear == 5773)
-						yield return new ScheduleValue("משנה ברורה", Zmanim.Sunset + TimeSpan.FromMinutes(3 + 20));
 				} else {
-					//Non-summer
-					if (Date >= new DateTime(2012, 12, 17)) {
-						if (hasמשנהברורה)
-							yield return new ScheduleValue("משנה ברורה", Time(8, 45, PM));
-						yield return new ScheduleValue(dafYomiString, Time(9, 15, PM));
-						yield return new ScheduleValue("מעריב", Time(9, 00, PM));
-					} else {
-						yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
-						yield return new ScheduleValue("מעריב", Time(10, 00, PM));
-					}
+					if (hasמשנהברורה)
+						yield return new ScheduleValue("משנה ברורה", Time(8, 45, PM));
+					yield return new ScheduleValue(dafYomiString, Time(9, 15, PM));
+					yield return new ScheduleValue("מעריב", Time(9, 00, PM));
 				}
 			}
 
 			//TODO: תענית בכורות / ערב פסח
-			//TODO: מנין on תענית
 
 			if ((Date + 1).Info.Is(Holiday.תשעה٠באב))
 				yield return new ScheduleValue("Sunset", Zmanim.Sunset);
