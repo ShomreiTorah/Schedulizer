@@ -198,6 +198,11 @@
       <Project>{a111d4e1-561f-405f-8fa4-6111a1d329b3}</Project>
       <Name>Schedulizer.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Schedulizer.Dumper\Schedulizer.Dumper.csproj">
+      <Project>{368ded7d-b870-455e-9ef0-a6f8901c7a3c}</Project>
+      <Name>Schedulizer.Dumper</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\Schedulizer.Exporter\Schedulizer.Exporter.csproj">
       <Project>{4641996c-b83d-4039-ad25-a21e410116aa}</Project>
       <Name>Schedulizer.Exporter</Name>
@@ -212,6 +217,7 @@
       <WrapperTool>primary</WrapperTool>
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>True</Private>
     </COMReference>
     <COMReference Include="Microsoft.Office.Interop.PowerPoint">
       <Guid>{91493440-5A91-11CF-8700-00AA0060263B}</Guid>
@@ -221,6 +227,7 @@
       <WrapperTool>primary</WrapperTool>
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>True</Private>
     </COMReference>
     <COMReference Include="Microsoft.Office.Interop.Word">
       <Guid>{00020905-0000-0000-C000-000000000046}</Guid>
@@ -230,6 +237,7 @@
       <WrapperTool>primary</WrapperTool>
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>True</Private>
     </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
