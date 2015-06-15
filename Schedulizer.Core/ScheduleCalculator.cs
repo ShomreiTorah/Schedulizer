@@ -386,7 +386,7 @@ namespace ShomreiTorah.Schedules {
 				if (DayOfWeek != DayOfWeek.Friday) {				//On יום טוב ערב שבת, we have מעריב right after מנחה.
 					if (Holiday.Is(Holiday.ראש٠השנה.Days.First()))	//ראש השנה מעריב is longer, so we start 10 minutes earlier.
 						maariv = defaultמנחה + TimeSpan.FromMinutes(70);
-					else if (!Enumerable.Range(1, 6).Any(i => (Date + i).Info.Isשבתיוםטוב			// Because we don't say ויהי נועם, we daven מעריב five minutes later.
+					else if (Enumerable.Range(1, 6).Any(i => (Date + i).Info.Isשבתיוםטוב			// Because we don't say ויהי נועם, we daven מעריב five minutes later.
 														   || (Date + i + 1).Info.Is(Holiday.פסח)))	// ערב פסח is also enough to prevent ויהי נועם.
 						maariv = defaultמנחה + TimeSpan.FromMinutes(85);
 					else if (Isיוםטוב)
@@ -505,6 +505,7 @@ namespace ShomreiTorah.Schedules {
 				yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
 			} else if (dafYomi == דףיומיType.WeekNight) {
 				var hasמשנהברורה = Date.EnglishDate.Year >= 2013
+				 && Date < new DateTime(2015, 6, 1)
 				 && (Date > LaborDay || Date <= SummerStart)
 				 && HolidayCategory != HolidayCategory.חולהמועד;
 
