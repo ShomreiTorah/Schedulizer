@@ -411,6 +411,9 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("מגילה", defaultמנחה + TimeSpan.FromMinutes(95 + 10 + 90));
 					yield return new ScheduleValue("מסיבה", Time(10, 00, PM));
 				}
+				if ((Date + 1).Info.Is(Holiday.תשעה٠באב))
+					yield return new ScheduleValue("איכה", maariv.Value + TimeSpan.FromMinutes(25));
+
 				#endregion
 			} else if ((Date + 1).Info.Is(Holiday.יום٠כיפור)) {
 				yield return new ScheduleValue("מנחה", Time(3, 00, PM));
@@ -529,7 +532,7 @@ namespace ShomreiTorah.Schedules {
 			if ((Date + 1).Info.Is(Holiday.תשעה٠באב))
 				yield return new ScheduleValue("Sunset", Zmanim.Sunset);
 			if (HolidayCategory == HolidayCategory.תענית && DayOfWeek != DayOfWeek.Friday)
-				yield return new ScheduleValue("Fast Ends", Zmanim.Sunset + TimeSpan.FromMinutes(45));
+				yield return new ScheduleValue("Fast Ends", Zmanim.Sunset + TimeSpan.FromMinutes(Date.Info.Is(Holiday.תשעה٠באב) ? 50 : 45));
 
 			yield break;
 		}
