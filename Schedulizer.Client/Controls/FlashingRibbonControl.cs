@@ -46,7 +46,8 @@ namespace ShomreiTorah.Schedules.WinClient.Controls {
 		class FakeHitInfo : RibbonHitInfo {
 			public FakeHitInfo(RibbonItemViewInfo info) {
 				SetItem(info, RibbonHitTest.Item);
-				base.PageGroup = info.Owner as RibbonPageGroup;
+				if (info != null)
+					base.PageGroup = info.Owner as RibbonPageGroup;
 				HitPoint = InvalidPoint;
 			}
 		}
