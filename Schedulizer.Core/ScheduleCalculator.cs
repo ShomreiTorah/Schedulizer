@@ -383,14 +383,18 @@ namespace ShomreiTorah.Schedules {
 
 
 				TimeSpan? maariv = null;
-				if (DayOfWeek != DayOfWeek.Friday) {                //On יום טוב ערב שבת, we have מעריב right after מנחה.
+				if (DayOfWeek != DayOfWeek.Friday) {                 //On יום טוב ערב שבת, we have מעריב right after מנחה.
+					// Many of these offsets are identical, but they may change in the future.
 					if (Holiday.Is(Holiday.ראש٠השנה.Days.First()))  //ראש השנה מעריב is longer, so we start 10 minutes earlier.
 						maariv = defaultמנחה + TimeSpan.FromMinutes(70);
-					else if (Enumerable.Range(1, 6).Any(i => (Date + i).Info.Isשבתיוםטוב           // Because we don't say ויהי נועם, we daven מעריב five minutes later.
-														   || (Date + i + 1).Info.Is(Holiday.פסח))) // ערב פסח is also enough to prevent ויהי נועם.
-						maariv = defaultמנחה + TimeSpan.FromMinutes(85);
-					else if (Isיוםטוב)
-						maariv = (Zmanim.Sunset + TimeSpan.FromMinutes(54)).RoundDown();
+					else if (!(Date + 1).Info.Isשבתיוםטוב                                         // On a מוצאי שבת/יום טוב when there is no ויהי נועם,
+						  && Enumerable.Range(1, 6).Any(i => (Date + i).Info.Isשבתיוםטוב          // (because there is a שבת, יום טוב, or ערב פסח within 6 days)
+														  || (Date + i + 1).Info.Is(Holiday.פסח)))
+						maariv = (Zmanim.Sunset + TimeSpan.FromMinutes(57)).RoundDown();           // We daven מעריב five minutes later.
+					else if (Isיוםטוב && DayOfWeek == DayOfWeek.Saturday)     // יום טוב on מוצאי שבת is more מחמיר to end שבת later.
+						maariv = (Zmanim.Sunset + TimeSpan.FromMinutes(57)).RoundDown();
+					else if (Isיוםטוב)                                      // 2nd night of יום טוב is faster
+						maariv = (Zmanim.Sunset + TimeSpan.FromMinutes(57)).RoundDown();
 					else
 						maariv = defaultמנחה + TimeSpan.FromMinutes(80);
 					if (Holiday.Is(Holiday.פסח[1]) || Holiday.Is(Holiday.פסח[2]))
