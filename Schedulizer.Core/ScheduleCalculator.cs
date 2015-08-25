@@ -238,9 +238,11 @@ namespace ShomreiTorah.Schedules {
 				if (Holiday.Is(Holiday.תשעה٠באב))
 					yield return new ScheduleValue("שחרית", Time(8, 15, AM));
 				else {
-					var shacharis = DayOfWeek == DayOfWeek.Sunday ? Time(8, 00, AM) : Time(6, 30, AM);
-
 					var selichosOffset = GetסליחותOffset();
+					var shacharis = DayOfWeek == DayOfWeek.Sunday
+						? Time(8, 00, AM) : Time(6, selichosOffset.HasValue ? 40 : 30, AM);
+					// When there are separate סליחות (on צום גדליה), we don't need to add time for them during שחרית.
+
 					if (selichosOffset.HasValue)
 						yield return new ScheduleValue("סליחות", shacharis - selichosOffset.Value, true);
 
@@ -384,7 +386,7 @@ namespace ShomreiTorah.Schedules {
 
 				TimeSpan? maariv = null;
 				if (DayOfWeek != DayOfWeek.Friday) {                 //On יום טוב ערב שבת, we have מעריב right after מנחה.
-					// Many of these offsets are identical, but they may change in the future.
+																	 // Many of these offsets are identical, but they may change in the future.
 					if (Holiday.Is(Holiday.ראש٠השנה.Days.First()))  //ראש השנה מעריב is longer, so we start 10 minutes earlier.
 						maariv = defaultמנחה + TimeSpan.FromMinutes(70);
 					else if (!(Date + 1).Info.Isשבתיוםטוב                                         // On a מוצאי שבת/יום טוב when there is no ויהי נועם,
@@ -422,7 +424,7 @@ namespace ShomreiTorah.Schedules {
 			} else if ((Date + 1).Info.Is(Holiday.יום٠כיפור)) {
 				yield return new ScheduleValue("מנחה", Time(3, 00, PM));
 
-				var kolNidrei = GetDefaultערב٠שבת٠מנחה(Date);
+				var kolNidrei = GetDefaultערב٠שבת٠מנחה(Date) + TimeSpan.FromMinutes(5);
 
 				yield return new ScheduleValue("תפילה זכה", kolNidrei - TimeSpan.FromMinutes(10));
 				yield return new ScheduleValue("כל נדרי", kolNidrei);
