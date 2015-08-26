@@ -187,6 +187,7 @@ namespace ShomreiTorah.Schedules {
 				if ((Date - 1).Info.Is(Holiday.סוכות.Days.Last()))
 					dafYomi = דףיומיType.Beforeמנחה;            //On שבת אסרו חג סוכות, there is no שיעור, since people are likely to go away
 				else if (HolidayName == "שבת שובה" ||
+						 (Date + 7).Info.Holiday?.Name == "שבת שובה" ||
 						 (Date > new HebrewDayOfYear(HebrewMonth.ניסן, 6) && Date < new HebrewDayOfYear(HebrewMonth.ניסן, 14)))
 					dafYomi = דףיומיType.Beforeשחרית;
 				else if (Date.EnglishDate.IsDaylightSavingTime())
@@ -373,6 +374,8 @@ namespace ShomreiTorah.Schedules {
 
 				if (dafYomi == דףיומיType.Beforeשיעור)
 					yield return new ScheduleValue(dafYomiString, shiurTime - TimeSpan.FromHours(1));
+				if ((Date + 7).Info.Holiday?.Name == "שבת שובה")
+					yield return new ScheduleValue("שיעור לנשים", shiurTime - TimeSpan.FromHours(1));
 
 				if (dafYomi == דףיומיType.Beforeמנחה)
 					yield return new ScheduleValue(dafYomiString, actualמנחה - TimeSpan.FromHours(1));
