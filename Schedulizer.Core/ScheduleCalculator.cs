@@ -201,6 +201,8 @@ namespace ShomreiTorah.Schedules {
 				dafYomi = דףיומיType.NightAlone;
 			else if (Date >= SummerStart && Date <= LaborDay)
 				dafYomi = דףיומיType.NightAlone;
+			else if (DayOfWeek!= DayOfWeek.Sunday && (Date + 1).Info.Is(Holiday.חנוכה))		// No weeknight מעריב with lighting.
+				dafYomi = דףיומיType.NightAlone;
 			else
 				dafYomi = דףיומיType.WeekNight;
 
