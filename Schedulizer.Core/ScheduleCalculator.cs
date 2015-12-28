@@ -201,7 +201,7 @@ namespace ShomreiTorah.Schedules {
 				dafYomi = דףיומיType.NightAlone;
 			else if (Date >= SummerStart && Date <= LaborDay)
 				dafYomi = דףיומיType.NightAlone;
-			else if (DayOfWeek!= DayOfWeek.Sunday && (Date + 1).Info.Is(Holiday.חנוכה))		// No weeknight מעריב with lighting.
+			else if (DayOfWeek != DayOfWeek.Sunday && (Date + 1).Info.Is(Holiday.חנוכה))        // No weeknight מעריב with lighting.
 				dafYomi = דףיומיType.NightAlone;
 			else
 				dafYomi = דףיומיType.WeekNight;
@@ -276,6 +276,11 @@ namespace ShomreiTorah.Schedules {
 					if (Date >= new DateTime(2013, 11, 10))
 						yield return new ScheduleValue("סדר לימוד", Time(9, 00, AM));
 				}
+			} else if (DayOfWeek != DayOfWeek.Sunday
+				&& (Date.EnglishDate.DayOfYear == 1
+					|| (Date.EnglishDate.Month == 12 && Date.EnglishDate.Day == 25))) {
+				yield return new ScheduleValue("נץ", Zmanim.Sunrise);
+				yield return new ScheduleValue("שחרית", Zmanim.Sunrise - TimeSpan.FromMinutes(25), true);
 			} else {
 				var shacharis = GetWeekdayשחרית(out isשחריתBold);
 				var selichosOffset = GetסליחותOffset();
