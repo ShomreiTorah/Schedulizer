@@ -33,7 +33,14 @@ namespace ShomreiTorah.Schedules {
 		public bool IsEmpty { get { return Name == null; } }
 
 		///<summary>Gets the time for this value in string form.</summary>
-		public string TimeString { get { return Time.ToString("h:mm", CultureInfo.CurrentCulture); } }
+		public string TimeString {
+			get {
+				var time = Time;
+				if (time.TotalHours > 12)	// Convert PM to AM.
+					time -= TimeSpan.FromHours(12);
+				return time.ToString(@"h\:mm", CultureInfo.CurrentCulture);
+			}
+		}
 
 		#region Equality
 		public override bool Equals(object obj) { return obj is ScheduleValue && Equals((ScheduleValue)obj); }

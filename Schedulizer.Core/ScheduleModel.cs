@@ -23,7 +23,6 @@ namespace ShomreiTorah.Schedules {
 		public ScheduleContext(DBConnector database) : this(CreateEntityConnection(database)) { shouldCloseConnection = true; DB = database; }
 
 		partial void OnContextCreated() {
-			_CellSet = CellSet.Include("Times");
 			loadedCells = new CellDictionary(this);
 		}
 
@@ -97,7 +96,7 @@ namespace ShomreiTorah.Schedules {
 			if (loadedCells.TryGetValue(date, out retVal))
 				return retVal;
 
-			retVal = CellSet.FirstOrDefault(c => c.EnglishDate == date);
+			retVal = CellSet.Include("Times").FirstOrDefault(c => c.EnglishDate == date);
 
 			if (retVal == null)
 				retVal = CreateCell(date);
@@ -125,7 +124,7 @@ namespace ShomreiTorah.Schedules {
 			}
 			if (from > to) return;      //Everything is already loaded
 
-			var newCells = CellSet
+			var newCells = CellSet.Include("Times")
 				.Where(c => c.EnglishDate >= from && c.EnglishDate <= to)
 				.AsEnumerable() //LINQ to Entities cannot handle Except(IComparer)
 				.Except(loadedCells, cellDateComparer)
@@ -269,7 +268,7 @@ namespace ShomreiTorah.Schedules {
 		#endregion
 
 	}
-	public sealed partial class ScheduleTime {
+	sealed partial class ScheduleTime {
 		public ScheduleTime() {
 			Id = Guid.NewGuid();
 			SqlTime = DateTime.Now; //Bugfix; otherwise, when times are added by the grid, they default to 1/1/0001, which doesn't fit in SQL Server
@@ -308,7 +307,14 @@ namespace ShomreiTorah.Schedules {
 		}
 
 		///<summary>Gets the time for this value in string form.</summary>
-		public string TimeString { get { return Time.ToString("h:mm", CultureInfo.CurrentCulture); } }
+		public string TimeString {
+			get {
+				var time = Time;
+				if (time.TotalHours > 12)   // Convert PM to AM.
+					time -= TimeSpan.FromHours(12);
+				return time.ToString(@"h\:mm", CultureInfo.CurrentCulture);
+			}
+		}
 
 		public override string ToString() { return Name + ": " + TimeString; }
 
