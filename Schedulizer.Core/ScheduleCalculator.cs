@@ -198,7 +198,7 @@ namespace ShomreiTorah.Schedules {
 			} else if ((Date + 1).Info.Isשבתיוםטוב || (Date + 1).Info.Is(Holiday.תשעה٠באב))
 				dafYomi = דףיומיType.None;
 			else if (HolidayCategory == HolidayCategory.תענית)
-				dafYomi = דףיומיType.NightAlone;
+				dafYomi = (Date + 1).Info.Is(Holiday.פורים) ? דףיומיType.None : דףיומיType.NightAlone;
 			else if (Date >= SummerStart && Date <= LaborDay)
 				dafYomi = דףיומיType.NightAlone;
 			else if (DayOfWeek != DayOfWeek.Sunday && (Date + 1).Info.Is(Holiday.חנוכה))        // No weeknight מעריב with lighting.
@@ -481,7 +481,7 @@ namespace ShomreiTorah.Schedules {
 				var mincha = (Zmanim.Sunset - TimeSpan.FromMinutes(30)).RoundDown();
 
 				if (TimeZoneInfo.Local.IsDaylightSavingTime(Date)       //פורים is on Sunday
-					|| (Date + 1).Info.Is(Holiday.פורים)) {             //פורים is on Tuesday, Thursday, or Friday
+					|| (Date + 1).Info.Is(Holiday.פורים)) {            //פורים is on Tuesday, Thursday, or Friday
 					yield return new ScheduleValue("מנחה", mincha);
 					yield return new ScheduleValue("מעריב", mincha + TimeSpan.FromHours(1));
 				}
