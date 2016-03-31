@@ -483,12 +483,12 @@ namespace ShomreiTorah.Schedules {
 				if (TimeZoneInfo.Local.IsDaylightSavingTime(Date)       //פורים is on Sunday
 					|| (Date + 1).Info.Is(Holiday.פורים)) {            //פורים is on Tuesday, Thursday, or Friday
 					yield return new ScheduleValue("מנחה", mincha);
-					yield return new ScheduleValue("מעריב", mincha + TimeSpan.FromHours(1));
+					yield return new ScheduleValue("מעריב", mincha + TimeSpan.FromMinutes(65));
 				}
 
 				if ((Date + 1).Info.Is(Holiday.פורים)) {                //פורים is on Tuesday, Thursday, or Friday
-					yield return new ScheduleValue("מגילה", mincha + TimeSpan.FromMinutes(75));
-					yield return new ScheduleValue("מגילה", mincha + TimeSpan.FromMinutes(75 + 90));
+					yield return new ScheduleValue("מגילה", mincha + TimeSpan.FromMinutes(80));
+					yield return new ScheduleValue("מגילה", mincha + TimeSpan.FromMinutes(80 + 90));
 
 					if (TimeZoneInfo.Local.IsDaylightSavingTime(Date) || Date.DayOfWeek != DayOfWeek.Friday)
 						yield return new ScheduleValue("מסיבה", Time(10, 00, PM));
@@ -514,7 +514,7 @@ namespace ShomreiTorah.Schedules {
 					dafYomi = דףיומיType.None;
 				}
 				yield return new ScheduleValue("מנחה", mincha);
-				yield return new ScheduleValue("מעריב", mincha + TimeSpan.FromHours(1));
+				yield return new ScheduleValue("מעריב", mincha + TimeSpan.FromMinutes(65));
 			}
 
 			if (hasLateCandleLighting) {
@@ -548,7 +548,7 @@ namespace ShomreiTorah.Schedules {
 			if ((Date + 1).Info.Is(Holiday.תשעה٠באב))
 				yield return new ScheduleValue("Sunset", Zmanim.Sunset);
 			if (HolidayCategory == HolidayCategory.תענית && DayOfWeek != DayOfWeek.Friday)
-				yield return new ScheduleValue("Fast Ends", Zmanim.Sunset + TimeSpan.FromMinutes(Date.Info.Is(Holiday.תשעה٠באב) ? 50 : 45));
+				yield return new ScheduleValue("Fast Ends", Zmanim.Sunset + TimeSpan.FromMinutes(50));
 
 			yield break;
 		}
