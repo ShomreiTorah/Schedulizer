@@ -159,9 +159,20 @@ namespace ShomreiTorah.Schedules {
 			return (date.GetZmanim().Sunset - TimeSpan.FromMinutes(18)).RoundDown() + TimeSpan.FromMinutes(5);  //Always add, even if it's already a multiple of 5.
 		}
 
+		private bool HasLateCandleLighting() {
+			return Date.Info.Isשבתיוםטוב
+				&& Date.DayOfWeek != DayOfWeek.Friday
+				&& (Date + 1).Info.Isשבתיוםטוב;
+		}
 		protected virtual TimeSpan Getערב٠שבת٠מנחה(TimeSpan defaultמנחה, out bool isEarly) {
 			isEarly = false;
-			if ((Date + 1).Info.Is(HolidayCategory.דאריתא) && !Date.Info.Is(Holiday.פסח[6]))
+			if (HasLateCandleLighting() || !(Date + 1).Info.Isשבתיוםטוב)
+				return defaultמנחה;
+
+			// We allow early מנחה on ערב יום טוב or ערב שבת,
+			// but not a normal 2nd night of יום טוב.
+			if ((Date + 1).Info.Is(Holiday.פסח[1]) || (Date + 1).Info.Is(Holiday.פסח[2]) // Don't make early סדר
+			 || (Date + 1).Info.Is(Holiday.שבועות[1]))          // Don't cut off ספירת העומר
 				return defaultמנחה;
 			else if (Date.Info.Is(HolidayCategory.תענית))
 				return defaultמנחה - TimeSpan.FromMinutes(15);
@@ -206,7 +217,6 @@ namespace ShomreiTorah.Schedules {
 			else
 				dafYomi = דףיומיType.WeekNight;
 
-			//TODO: שובה
 			if (dafYomi == דףיומיType.Beforeשחרית)
 				yield return new ScheduleValue(dafYomiString, Time(7, 30, AM));
 
@@ -312,25 +322,25 @@ namespace ShomreiTorah.Schedules {
 			yield return new ScheduleValue("סזק״ש", Zmanim.סוף٠זמן٠קריאת٠שמע٠גרא);
 			#endregion
 
-			bool hasLateCandleLighting = Date.Info.Isשבתיוםטוב
-				&& Date.DayOfWeek != DayOfWeek.Friday
-				&& (Date + 1).Info.Isשבתיוםטוב;
 
 			bool isEarlyמנחה;
 			var normalמנחה = Getערב٠שבת٠מנחה(GetDefaultערב٠שבת٠מנחה(Date), out isEarlyמנחה);
 
-			if (!hasLateCandleLighting && (Date + 1).Info.Isשבתיוםטוב) {
+			if (!HasLateCandleLighting() && (Date + 1).Info.Isשבתיוםטוב) {
 				//When we have early מנחה, we list a separate
 				//candle lighting for people who choose early
 				//שבת.  However, if the two candle lightings
 				//are too close, only show one.
-				var hasTwoCandleLightings = isEarlyמנחה && (Zmanim.Sunset - TimeSpan.FromMinutes(18)) > Time(7, 32, PM);
+				// On ערב יום טוב, we don't end up davening
+				// מעריב early, so there is no need.
+				var hasTwoCandleLightings = isEarlyמנחה && DayOfWeek == DayOfWeek.Friday
+										 && (Zmanim.Sunset - TimeSpan.FromMinutes(18)) > Time(7, 32, PM);
 
 				var candlesName = hasTwoCandleLightings ? "Candles" : "Candle Lighting";
 
 				yield return new ScheduleValue(candlesName, Zmanim.Sunset - TimeSpan.FromMinutes(18));
 				if (hasTwoCandleLightings)
-					yield return new ScheduleValue(candlesName, Time(7, 30, PM));
+					yield return new ScheduleValue(candlesName, Isיוםטוב ? Time(7, 25, PM) : Time(7, 30, PM));
 			}
 
 			if (Isשבת || Isיוםטוב) {
@@ -364,6 +374,9 @@ namespace ShomreiTorah.Schedules {
 
 					isמנחהBold = Date == SummerStart;
 				}
+
+				if (isEarlyמנחה)
+					actualמנחה = Time(7, 00, PM);
 				#endregion
 
 				#region שיעור
@@ -517,7 +530,7 @@ namespace ShomreiTorah.Schedules {
 				yield return new ScheduleValue("מעריב", mincha + TimeSpan.FromMinutes(65));
 			}
 
-			if (hasLateCandleLighting) {
+			if (HasLateCandleLighting()) {
 				yield return new ScheduleValue("Candle Lighting", Zmanim.Sunset + TimeSpan.FromMinutes(72));
 			}
 			if (dafYomi == דףיומיType.NightAlone) {
@@ -552,5 +565,6 @@ namespace ShomreiTorah.Schedules {
 
 			yield break;
 		}
+
 	}
 }
