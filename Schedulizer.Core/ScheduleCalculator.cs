@@ -469,7 +469,7 @@ namespace ShomreiTorah.Schedules {
 					else if (Zmanim.Sunset < Time(5, 40, PM))
 						yield return new ScheduleValue("חומש שיעור", Time(8, 30, PM), true);
 				}
-				if ((Date + 1).Info.Is(HolidayCategory.דאריתא) && DayOfWeek != DayOfWeek.Friday) {
+				if ((Date + 1).Info.Is(HolidayCategory.דאריתא)) {
 					var maariv = normalמנחה + TimeSpan.FromMinutes(65);
 					if ((Date + 1).Info.Is(Holiday.ראש٠השנה))
 						maariv = normalמנחה + TimeSpan.FromMinutes(50);
