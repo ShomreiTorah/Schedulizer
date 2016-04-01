@@ -109,6 +109,9 @@ namespace ShomreiTorah.Schedules {
 			}
 			return new TimeSpan((int)ampm + hours, minutes, 0);
 		}
+		private bool Hasשבת٠הגדול٠דרשה(HebrewDate date) {
+			return date > new HebrewDayOfYear(HebrewMonth.ניסן, 6) && date < new HebrewDayOfYear(HebrewMonth.ניסן, 14);
+		}
 
 		#region שחרית
 		static readonly TimeSpan Defaultשבת٠יוםטוב٠שחרית = Time(8, 30, AM);
@@ -197,9 +200,8 @@ namespace ShomreiTorah.Schedules {
 			else if (Isשבת) {
 				if ((Date - 1).Info.Is(Holiday.סוכות.Days.Last()))
 					dafYomi = דףיומיType.Beforeמנחה;            //On שבת אסרו חג סוכות, there is no שיעור, since people are likely to go away
-				else if (HolidayName == "שבת שובה" ||
-						 (Date + 7).Info.Holiday?.Name == "שבת שובה" ||
-						 (Date > new HebrewDayOfYear(HebrewMonth.ניסן, 6) && Date < new HebrewDayOfYear(HebrewMonth.ניסן, 14)))
+				else if (HolidayName == "שבת שובה" || (Date + 7).Info.Holiday?.Name == "שבת שובה"
+					  || Hasשבת٠הגדול٠דרשה(Date) || Hasשבת٠הגדול٠דרשה(Date + 7))
 					dafYomi = דףיומיType.Beforeשחרית;
 				else if (Date.EnglishDate.IsDaylightSavingTime())
 					dafYomi = דףיומיType.Beforeשיעור;
@@ -382,7 +384,7 @@ namespace ShomreiTorah.Schedules {
 				#region שיעור
 				var shiurTime = actualמנחה - TimeSpan.FromHours(1);
 				var isדרשה = false;
-				if (Date > new HebrewDayOfYear(HebrewMonth.ניסן, 6) && Date < new HebrewDayOfYear(HebrewMonth.ניסן, 14)) {
+				if (Hasשבת٠הגדול٠דרשה(Date)) {
 					//שבת ערב פסח is not שבת הגדול
 					isדרשה = true;
 					shiurTime -= TimeSpan.FromMinutes(15);
@@ -396,6 +398,8 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue(dafYomiString, shiurTime - TimeSpan.FromHours(1));
 				if ((Date + 7).Info.Holiday?.Name == "שבת שובה")
 					yield return new ScheduleValue("שיעור לנשים", shiurTime - TimeSpan.FromHours(1));
+				if (Hasשבת٠הגדול٠דרשה(Date + 7))
+					yield return new ScheduleValue("דרשה לנשים", shiurTime - TimeSpan.FromMinutes(65));
 
 				if (dafYomi == דףיומיType.Beforeמנחה)
 					yield return new ScheduleValue(dafYomiString, actualמנחה - TimeSpan.FromHours(1));
