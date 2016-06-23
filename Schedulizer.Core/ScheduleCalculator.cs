@@ -212,7 +212,7 @@ namespace ShomreiTorah.Schedules {
 				dafYomi = דףיומיType.None;
 			else if (HolidayCategory == HolidayCategory.תענית)
 				dafYomi = (Date + 1).Info.Is(Holiday.פורים) ? דףיומיType.None : דףיומיType.NightAlone;
-			else if (Date >= SummerStart && Date <= LaborDay)
+			else if (Date >= SummerStart && Date <= LaborDay && DayOfWeek != DayOfWeek.Sunday)
 				dafYomi = דףיומיType.NightAlone;
 			else if (DayOfWeek != DayOfWeek.Sunday && (Date + 1).Info.Is(Holiday.חנוכה))        // No weeknight מעריב with lighting.
 				dafYomi = דףיומיType.NightAlone;
