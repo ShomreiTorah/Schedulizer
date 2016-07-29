@@ -433,6 +433,10 @@ namespace ShomreiTorah.Schedules {
 					maariv += TimeSpan.FromMinutes(10);     // No clue why
 					yield return new ScheduleValue("הקפות", maariv.Value + TimeSpan.FromMinutes(15));
 				}
+				if ((Date + 1).Info.Is(Holiday.תשעה٠באב)) {
+					maariv += TimeSpan.FromMinutes(5);	// Give people time to take off shoes.
+					yield return new ScheduleValue("איכה", maariv.Value + TimeSpan.FromMinutes(25));
+				}
 				if (maariv != null)
 					yield return new ScheduleValue("מעריב", maariv.Value);
 
@@ -444,8 +448,6 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("מגילה", defaultמנחה + TimeSpan.FromMinutes(95 + 10 + 90));
 					yield return new ScheduleValue("מסיבה", Time(10, 00, PM));
 				}
-				if ((Date + 1).Info.Is(Holiday.תשעה٠באב))
-					yield return new ScheduleValue("איכה", maariv.Value + TimeSpan.FromMinutes(25));
 
 				#endregion
 			} else if ((Date + 1).Info.Is(Holiday.יום٠כיפור)) {
@@ -521,7 +523,7 @@ namespace ShomreiTorah.Schedules {
 			} else if (Holiday.Is(Holiday.תשעה٠באב)) {
 				yield return new ScheduleValue("מנחה", Time(1, 40, PM));
 				yield return new ScheduleValue("חצות", Zmanim.חצות);
-				yield return new ScheduleValue("מעריב", Zmanim.Sunset.RoundUp() + TimeSpan.FromMinutes(30));
+				yield return new ScheduleValue("מעריב", Zmanim.Sunset.RoundDown() + TimeSpan.FromMinutes(40));
 				dafYomi = דףיומיType.None;
 			} else if (HolidayCategory == HolidayCategory.תענית     //On a weekday, עשרה בטבת is too early for מנחה/מעריב.
 					&& (HolidayName != "עשרה בטבת" || DayOfWeek == DayOfWeek.Sunday)) {
@@ -565,7 +567,8 @@ namespace ShomreiTorah.Schedules {
 			if ((Date + 1).Info.Is(Holiday.תשעה٠באב))
 				yield return new ScheduleValue("Sunset", Zmanim.Sunset);
 			if (HolidayCategory == HolidayCategory.תענית && DayOfWeek != DayOfWeek.Friday)
-				yield return new ScheduleValue("Fast Ends", Zmanim.Sunset + TimeSpan.FromMinutes(50));
+				yield return new ScheduleValue("Fast Ends", Zmanim.Sunset
+					+ TimeSpan.FromMinutes(Date.Info.Is(Holiday.תשעה٠באב) ? 55 : 50));
 
 			yield break;
 		}
