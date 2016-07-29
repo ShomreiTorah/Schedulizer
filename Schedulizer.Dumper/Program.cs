@@ -13,7 +13,7 @@ namespace ShomreiTorah.Schedules.Dumper {
 				Console.WriteLine("---- " + date.EnglishDate.ToShortDateString()
 								+ " " + date.DayOfWeek
 								+ ": " + date.ToString("d") + " " + calc.CalcTitle());
-				foreach (var time in calc.CalcTimes()) {
+				foreach (var time in calc.CalcTimes().OrderBy(c => c.Time)) {
 					Console.WriteLine((time.Name + ":").PadRight(10) + time.TimeString + (time.IsBold ? " **" : ""));
 				}
 				Console.WriteLine();
