@@ -57,9 +57,6 @@ namespace ShomreiTorah.Schedules {
 			 || (DayOfWeek == DayOfWeek.Thursday && !(Date).Info.Is(HolidayCategory.דאריתא) && (Date + 1).Info.Is(HolidayCategory.דאריתא)))
 				retVal.AppendLine("ערוב תבשילין");
 
-			if ((Date + 2).Info.Is(Holiday.תשעה٠באב) && (Date + 1).Info.Isשבת)
-				retVal.AppendLine("Bring shoes on ערב שבת");
-
 			if (Date.EnglishDate.Month == 12 && Date.EnglishDate.Day == 4 + (DateTime.IsLeapYear(Date.EnglishDate.Year + 1) ? 1 : 0))
 				retVal.AppendLine("ותן טל ומטר");
 
@@ -434,8 +431,8 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("הקפות", maariv.Value + TimeSpan.FromMinutes(15));
 				}
 				if ((Date + 1).Info.Is(Holiday.תשעה٠באב)) {
-					maariv += TimeSpan.FromMinutes(5);	// Give people time to take off shoes.
-					yield return new ScheduleValue("איכה", maariv.Value + TimeSpan.FromMinutes(25));
+					maariv += TimeSpan.FromMinutes(30);	// Give people time to take off shoes at home.
+					yield return new ScheduleValue("איכה", maariv.Value + TimeSpan.FromMinutes(15));
 				}
 				if (maariv != null)
 					yield return new ScheduleValue("מעריב", maariv.Value);
