@@ -33,6 +33,14 @@ namespace ShomreiTorah.Schedules {
 
 		DateTime SummerStart { get { return new DateTime(Date.EnglishDate.Year, 7, 1).Last(DayOfWeek.Saturday); } }
 		DateTime LaborDay { get { return new DateTime(Date.EnglishDate.Year, 9, 1).Next(DayOfWeek.Monday); } }
+		DateTime SummerEnd {
+			get {
+				HebrewDate date = LaborDay.Last(DayOfWeek.Saturday);
+				if (date.HebrewMonth == HebrewMonth.אב)
+					return new HebrewDate(date.HebrewYear, HebrewMonth.אלול, 1).Next(DayOfWeek.Saturday);
+				return date;
+			}
+		}
 
 
 		public virtual string CalcTitle() {
@@ -67,9 +75,9 @@ namespace ShomreiTorah.Schedules {
 				retVal.AppendLine("Daylight Saving Time Begins");
 
 			if (Date == SummerStart)
-				retVal.AppendLine("No סעדה שלישית");
-			if (Date == LaborDay.Last(DayOfWeek.Saturday))
-				retVal.AppendLine("סעדה שלישית Resumes");
+				retVal.AppendLine("No סעודה שלישית");
+			if (Date == SummerEnd)
+				retVal.AppendLine("סעודה שלישית Resumes");
 
 			if (Holiday.Is(Holiday.סוכות)
 				&& HolidayCategory == HolidayCategory.חולהמועד
@@ -209,7 +217,7 @@ namespace ShomreiTorah.Schedules {
 				dafYomi = דףיומיType.None;
 			else if (HolidayCategory == HolidayCategory.תענית)
 				dafYomi = (Date + 1).Info.Is(Holiday.פורים) ? דףיומיType.None : דףיומיType.NightAlone;
-			else if (Date >= SummerStart && Date <= LaborDay && DayOfWeek != DayOfWeek.Sunday)
+			else if (Date >= SummerStart && (Date == LaborDay || Date < SummerEnd) && DayOfWeek != DayOfWeek.Sunday)
 				dafYomi = דףיומיType.NightAlone;
 			else if (DayOfWeek != DayOfWeek.Sunday && (Date + 1).Info.Is(Holiday.חנוכה))        // No weeknight מעריב with lighting.
 				dafYomi = דףיומיType.NightAlone;
@@ -361,7 +369,7 @@ namespace ShomreiTorah.Schedules {
 				else if (HolidayCategory == HolidayCategory.חולהמועד) { //שבת חול המועד מנחה is early to allow for סעודה שלישית.
 					actualמנחה -= TimeSpan.FromMinutes(15);
 					isמנחהBold = true;
-				} else if (Date >= SummerStart && Date < LaborDay.Last(DayOfWeek.Saturday)) {
+				} else if (Date >= SummerStart && Date < SummerEnd) {
 					// During the summer time, until the שבת before Labor Day (Labor
 					// Day weekend), there is no סעודה שלישית, we have מנחה early.
 					if (actualמנחה > Time(7, 50, PM))
@@ -431,7 +439,7 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("הקפות", maariv.Value + TimeSpan.FromMinutes(15));
 				}
 				if ((Date + 1).Info.Is(Holiday.תשעה٠באב)) {
-					maariv += TimeSpan.FromMinutes(30);	// Give people time to take off shoes at home.
+					maariv += TimeSpan.FromMinutes(30); // Give people time to take off shoes at home.
 					yield return new ScheduleValue("איכה", maariv.Value + TimeSpan.FromMinutes(15));
 				}
 				if (maariv != null)
@@ -541,7 +549,7 @@ namespace ShomreiTorah.Schedules {
 			} else if (dafYomi == דףיומיType.WeekNight) {
 				var hasמשנהברורה = Date.EnglishDate.Year >= 2013
 				 && Date < new DateTime(2015, 6, 1)
-				 && (Date > LaborDay || Date <= SummerStart)
+				 && (Date > SummerEnd || Date <= SummerStart)
 				 && HolidayCategory != HolidayCategory.חולהמועד;
 
 				if (DayOfWeek == DayOfWeek.Sunday || Date == בדיקה) {
