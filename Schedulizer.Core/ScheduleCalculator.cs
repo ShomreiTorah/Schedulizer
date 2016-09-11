@@ -281,18 +281,16 @@ namespace ShomreiTorah.Schedules {
 				yield return new ScheduleValue("סליחות", Time(1, 00, AM), true);
 				yield return new ScheduleValue("שחרית", Time(8, 00, AM));
 			} else if (Date == LaborDay || DayOfWeek == DayOfWeek.Sunday) {
-
+				var isSummer = Date >= SummerStart && Date <= LaborDay;
+				var שחרית = isSummer ? Time(8, 00, AM) : Time(7, 45, AM);
+				if ((Date + 1).Info.Is(Holiday.ראש٠השנה))
+					שחרית = Time(8, 00, AM);
 				var selichosOffset = GetסליחותOffset();
-				if (selichosOffset.HasValue) {
-					yield return new ScheduleValue("סליחות", Time(8, 00, AM) - selichosOffset.Value, true);
-					yield return new ScheduleValue("שחרית", Time(8, 00, AM));
-				} else if (Date >= SummerStart && Date <= LaborDay) {
-					yield return new ScheduleValue("שחרית", Time(8, 00, AM));
-				} else {
-					yield return new ScheduleValue("שחרית", Time(7, 45, AM));
-					if (Date >= new DateTime(2013, 11, 10))
-						yield return new ScheduleValue("סדר לימוד", Time(9, 00, AM));
-				}
+				if (selichosOffset.HasValue)
+					yield return new ScheduleValue("סליחות", שחרית - selichosOffset.Value, true);
+				yield return new ScheduleValue("שחרית", שחרית);
+				if (!isSummer && !selichosOffset.HasValue)
+					yield return new ScheduleValue("סדר לימוד", Time(9, 00, AM));
 			} else if (DayOfWeek != DayOfWeek.Sunday
 				&& (Date.EnglishDate.DayOfYear == 1
 					|| (Date.EnglishDate.Month == 12 && Date.EnglishDate.Day == 25))) {
