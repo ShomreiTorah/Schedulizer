@@ -260,7 +260,7 @@ namespace ShomreiTorah.Schedules {
 				else {
 					var selichosOffset = GetסליחותOffset();
 					var shacharis = DayOfWeek == DayOfWeek.Sunday
-						? Time(8, 00, AM) : Time(6, selichosOffset.HasValue ? 40 : 30, AM);
+						? Time(8, 00, AM) : Time(6, selichosOffset.HasValue ? 35 : 30, AM);
 					// When there are separate סליחות (on צום גדליה), we don't need to add time for them during שחרית.
 
 					if (selichosOffset.HasValue)
