@@ -444,7 +444,8 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("מעריב", maariv.Value);
 
 				if (Holiday.Is(Holiday.סוכות.Days[5]))
-					yield return new ScheduleValue("משנה תורה", maariv.Value + TimeSpan.FromMinutes(80));
+					yield return new ScheduleValue("משנה תורה", 
+						(maariv.Value + TimeSpan.FromMinutes(80)).RoundUp(TimeSpan.FromMinutes(15)));
 
 				if ((Date + 1).Info.Is(Holiday.פורים)) {    //10 minute delay for women to come to Shul
 					yield return new ScheduleValue("מגילה", defaultמנחה + TimeSpan.FromMinutes(95 + 10));
