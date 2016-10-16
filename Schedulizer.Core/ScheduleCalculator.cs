@@ -120,7 +120,7 @@ namespace ShomreiTorah.Schedules {
 
 		#region שחרית
 		static readonly TimeSpan Defaultשבת٠יוםטוב٠שחרית = Time(8, 30, AM);
-		static readonly TimeSpan timeUntilשמע = TimeSpan.FromMinutes(54);
+		static readonly TimeSpan timeUntilשמע = TimeSpan.FromMinutes(50);
 
 		TimeSpan Getשבת٠יוםטוב٠שחרית(out bool isBold) {
 			var latest = (Zmanim.סוף٠זמן٠קריאת٠שמע٠גרא - timeUntilשמע)
