@@ -270,7 +270,10 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("שחרית", shacharis);
 				}
 			} else if ((Holiday.Is(Holiday.פורים))) {
-				TimeSpan shacharis = DayOfWeek == DayOfWeek.Friday ? Time(7, 00, AM) : Time(7, 30, AM);
+				TimeSpan shacharis =
+					DayOfWeek == DayOfWeek.Friday ? Time(7, 00, AM)
+				  : DayOfWeek == DayOfWeek.Sunday ? Time(8, 00, AM)
+												  : Time(7, 30, AM);
 
 				yield return new ScheduleValue("שחרית", shacharis);
 				yield return new ScheduleValue("מגילה", shacharis + TimeSpan.FromMinutes(45));
