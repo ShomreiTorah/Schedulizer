@@ -557,11 +557,14 @@ namespace ShomreiTorah.Schedules {
 
 				if (DayOfWeek == DayOfWeek.Sunday || Date == בדיקה) {
 					yield return new ScheduleValue("מנחה", Zmanim.Sunset - TimeSpan.FromMinutes(15));
-					yield return new ScheduleValue("מעריב", Zmanim.Sunset + TimeSpan.FromMinutes(3));
+					TimeSpan maariv = Zmanim.Sunset + TimeSpan.FromMinutes(3);
+					yield return new ScheduleValue("מעריב", maariv);
 
 					//בדיקת חמץ night has מנחה/מעריב, but not דף יומי
 					if (Date != בדיקה)
-						yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
+						yield return new ScheduleValue(dafYomiString,
+							maariv > Time(8, 15, PM) ? maariv + TimeSpan.FromMinutes(15)
+													 : Time(9, 00, PM));
 				} else {
 					if (hasמשנהברורה)
 						yield return new ScheduleValue("משנה ברורה", Time(8, 45, PM));
