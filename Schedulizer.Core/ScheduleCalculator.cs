@@ -227,8 +227,8 @@ namespace ShomreiTorah.Schedules {
 			if (dafYomi == דףיומיType.Beforeשחרית)
 				yield return new ScheduleValue(dafYomiString, Time(7, 30, AM));
 
+			TimeSpan שבת٠שחרית = Getשבת٠יוםטוב٠שחרית(out var isשחריתBold);
 			#region שחרית
-			bool isשחריתBold;
 
 			if (Holiday.Is(Holiday.ראש٠השנה)) {
 				yield return new ScheduleValue("שחרית", Time(7, 45, AM), true);
@@ -250,8 +250,9 @@ namespace ShomreiTorah.Schedules {
 
 				if ((Date + 1).Info.Is(Holiday.פסח.Days.First()) && Isשבת)
 					yield return new ScheduleValue("שחרית", Time(6, 45, AM), true);
-				else
-					yield return new ScheduleValue("שחרית", Getשבת٠יוםטוב٠שחרית(out isשחריתBold), isשחריתBold);
+				else {
+					yield return new ScheduleValue("שחרית", שבת٠שחרית, isשחריתBold);
+				}
 			} else if (HolidayCategory == HolidayCategory.חולהמועד) {
 				yield return new ScheduleValue("שחרית", Time(8, 00, AM));
 			} else if (HolidayCategory == HolidayCategory.תענית) {
@@ -318,7 +319,7 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("יזכור (Approx)", Isשבת ? Time(11, 00, AM) : Time(10, 30, AM));
 
 				else if (Holiday == Holiday.פסח.Days.Last() || Holiday == Holiday.שבועות.Days.Last())
-					yield return new ScheduleValue("יזכור (Approx)", Isשבת ? Time(10, 45, AM) : Time(10, 30, AM));
+					yield return new ScheduleValue("יזכור (Approx)", שבת٠שחרית + TimeSpan.FromMinutes(Isשבת ? 135 : 120));
 			}
 			#endregion
 
@@ -444,7 +445,7 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("מעריב", maariv.Value);
 
 				if (Holiday.Is(Holiday.סוכות.Days[5]))
-					yield return new ScheduleValue("משנה תורה", 
+					yield return new ScheduleValue("משנה תורה",
 						(maariv.Value + TimeSpan.FromMinutes(80)).RoundUp(TimeSpan.FromMinutes(15)));
 
 				if ((Date + 1).Info.Is(Holiday.פורים)) {    //10 minute delay for women to come to Shul
