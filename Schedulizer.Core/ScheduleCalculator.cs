@@ -552,8 +552,9 @@ namespace ShomreiTorah.Schedules {
 				yield return new ScheduleValue("Candle Lighting", Zmanim.Sunset + TimeSpan.FromMinutes(72));
 			}
 			if (dafYomi == דףיומיType.NightAlone) {
-				yield return new ScheduleValue("מעריב", Time(9, 00, PM));
-				yield return new ScheduleValue(dafYomiString, Time(9, 15, PM));
+//				yield return new ScheduleValue("מעריב", Time(9, 00, PM));
+//				yield return new ScheduleValue(dafYomiString, Time(9, 15, PM));
+				yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
 			} else if (dafYomi == דףיומיType.WeekNight) {
 				var hasמשנהברורה = Date.EnglishDate.Year >= 2013
 				 && Date < new DateTime(2015, 6, 1)
