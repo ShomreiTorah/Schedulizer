@@ -574,8 +574,9 @@ namespace ShomreiTorah.Schedules {
 				} else {
 					if (hasמשנהברורה)
 						yield return new ScheduleValue("משנה ברורה", Time(8, 45, PM));
-					yield return new ScheduleValue("מעריב", Time(9, 00, PM));
-					yield return new ScheduleValue(dafYomiString, Time(9, 15, PM));
+//					yield return new ScheduleValue("מעריב", Time(9, 00, PM));
+//					yield return new ScheduleValue(dafYomiString, Time(9, 15, PM));
+					yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
 
 				}
 			}
