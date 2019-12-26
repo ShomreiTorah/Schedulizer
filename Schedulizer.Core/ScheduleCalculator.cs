@@ -199,6 +199,7 @@ namespace ShomreiTorah.Schedules {
 
 
 			string dafYomiString = "דף יומי";//I wanted to do this, but it doesn't fit in Word.  "דף יומי – " + Date.Info.DafYomiString;
+			string amudYomiString = "עמוד יומי";
 			דףיומיType dafYomi;
 			if (Isיוםטוב || (Isשבת && HolidayCategory == HolidayCategory.חולהמועד))
 				dafYomi = דףיומיType.Beforeמנחה;
@@ -224,8 +225,8 @@ namespace ShomreiTorah.Schedules {
 			else
 				dafYomi = דףיומיType.WeekNight;
 
-			if (dafYomi == דףיומיType.Beforeשחרית)
-				yield return new ScheduleValue(dafYomiString, Time(7, 30, AM));
+//			if (dafYomi == דףיומיType.Beforeשחרית)
+//				yield return new ScheduleValue(dafYomiString, Time(7, 30, AM));
 
 			TimeSpan שבת٠שחרית = Getשבת٠יוםטוב٠שחרית(out var isשחריתBold);
 			#region שחרית
@@ -401,15 +402,15 @@ namespace ShomreiTorah.Schedules {
 				}
 				#endregion
 
-				if (dafYomi == דףיומיType.Beforeשיעור)
-					yield return new ScheduleValue(dafYomiString, shiurTime - TimeSpan.FromHours(1));
+//				if (dafYomi == דףיומיType.Beforeשיעור)
+//					yield return new ScheduleValue(dafYomiString, shiurTime - TimeSpan.FromHours(1));
 				if ((Date + 7).Info.Holiday?.Name == "שבת שובה")
 					yield return new ScheduleValue("שיעור לנשים", shiurTime - TimeSpan.FromHours(1));
 				if (Hasשבת٠הגדול٠דרשה(Date + 7))
 					yield return new ScheduleValue("דרשה לנשים", shiurTime - TimeSpan.FromMinutes(65));
 
-				if (dafYomi == דףיומיType.Beforeמנחה)
-					yield return new ScheduleValue(dafYomiString, actualמנחה - TimeSpan.FromHours(1));
+//				if (dafYomi == דףיומיType.Beforeמנחה)
+//					yield return new ScheduleValue(dafYomiString, actualמנחה - TimeSpan.FromHours(1));
 				else        //When דף יומי isn't right before מנחה, there is a שיעור
 					yield return new ScheduleValue(isדרשה ? "דרשה" : "שיעור", shiurTime);
 
@@ -495,12 +496,12 @@ namespace ShomreiTorah.Schedules {
 						yield return new ScheduleValue("הקפות", maariv + TimeSpan.FromMinutes(15));
 				}
 			} else if (Holiday.Is(Holiday.סוכות.Days[5])) {
-				yield return new ScheduleValue(dafYomiString, Time(8, 00, PM));
+				yield return new ScheduleValue(amudYomiString, Time(8, 00, PM));
 				yield return new ScheduleValue("מעריב", Time(9, 00, PM));
 				yield return new ScheduleValue("משנה תורה", Time(9, 15, PM));
 				dafYomi = דףיומיType.None;
 			} else if (Holiday.Is(Holiday.סוכות) && (DayOfWeek == DayOfWeek.Monday || DayOfWeek == DayOfWeek.Thursday)) {   // This must be after the checks for ערב? יום טוב and משנה תורה
-				yield return new ScheduleValue(dafYomiString, Time(8, 00, PM));
+				yield return new ScheduleValue(amudYomiString, Time(8, 00, PM));
 				yield return new ScheduleValue("שמחת בית השואבה", Time(9, 00, PM));
 				yield return new ScheduleValue("מעריב", Time(10, 00, PM));
 				dafYomi = דףיומיType.None;
@@ -541,7 +542,7 @@ namespace ShomreiTorah.Schedules {
 					&& (HolidayName != "עשרה בטבת" || DayOfWeek == DayOfWeek.Sunday)) {
 				var mincha = (Zmanim.Sunset - TimeSpan.FromMinutes(30)).RoundDown();
 				if (mincha >= Time(7, 00, PM) || DayOfWeek == DayOfWeek.Sunday) {
-					yield return new ScheduleValue(dafYomiString, mincha - TimeSpan.FromMinutes(30));
+					yield return new ScheduleValue(amudYomiString, mincha - TimeSpan.FromMinutes(30));
 					dafYomi = דףיומיType.None;
 				}
 				yield return new ScheduleValue("מנחה", mincha);
@@ -552,9 +553,9 @@ namespace ShomreiTorah.Schedules {
 				yield return new ScheduleValue("Candle Lighting", Zmanim.Sunset + TimeSpan.FromMinutes(72));
 			}
 			if (dafYomi == דףיומיType.NightAlone) {
-//				yield return new ScheduleValue("מעריב", Time(9, 00, PM));
-//				yield return new ScheduleValue(dafYomiString, Time(9, 15, PM));
-				yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
+//				yield return new ScheduleValue(amudYomiString, Time(9, 15, PM));
+				yield return new ScheduleValue(amudYomiString, Time(9, 00, PM));
+				yield return new ScheduleValue("מעריב", Time(10, 00, PM));
 			} else if (dafYomi == דףיומיType.WeekNight) {
 				var hasמשנהברורה = Date.EnglishDate.Year >= 2013
 				 && Date < new DateTime(2015, 6, 1)
@@ -567,16 +568,23 @@ namespace ShomreiTorah.Schedules {
 					yield return new ScheduleValue("מעריב", maariv);
 
 					//בדיקת חמץ night has מנחה/מעריב, but not דף יומי
-					if (Date != בדיקה)
-						yield return new ScheduleValue(dafYomiString,
-							maariv > Time(8, 15, PM) ? maariv + TimeSpan.FromMinutes(15)
-													 : Time(9, 00, PM));
+					if (Date != בדיקה) {
+						if (maariv > Time(8, 15, PM)) {
+							yield return new ScheduleValue(amudYomiString,
+								  maariv + TimeSpan.FromMinutes(15)
+													);
+						} else {
+							yield return new ScheduleValue(amudYomiString, Time(9, 00, PM));
+							yield return new ScheduleValue("מעריב", Time(10, 00, PM));
+						}
+
+					}
 				} else {
 					if (hasמשנהברורה)
 						yield return new ScheduleValue("משנה ברורה", Time(8, 45, PM));
-//					yield return new ScheduleValue("מעריב", Time(9, 00, PM));
-//					yield return new ScheduleValue(dafYomiString, Time(9, 15, PM));
-					yield return new ScheduleValue(dafYomiString, Time(9, 00, PM));
+//					yield return new ScheduleValue(amudYomiString, Time(9, 15, PM));
+					yield return new ScheduleValue(amudYomiString, Time(9, 00, PM));
+					yield return new ScheduleValue("מעריב", Time(10, 00, PM));
 
 				}
 			}
