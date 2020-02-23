@@ -390,7 +390,7 @@ namespace ShomreiTorah.Schedules {
 				#endregion
 
 				#region שיעור
-				var shiurTime = actualמנחה - TimeSpan.FromHours(1);
+				var shiurTime = actualמנחה - TimeSpan.FromMinutes(65);
 				var isדרשה = false;
 				if (Hasשבת٠הגדול٠דרשה(Date)) {
 					//שבת ערב פסח is not שבת הגדול
@@ -575,7 +575,6 @@ namespace ShomreiTorah.Schedules {
 													);
 						} else {
 							yield return new ScheduleValue(amudYomiString, Time(9, 00, PM));
-							yield return new ScheduleValue("מעריב", Time(10, 00, PM));
 						}
 
 					}
