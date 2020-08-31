@@ -131,15 +131,16 @@ namespace ShomreiTorah.Schedules {
 		}
 		TimeSpan GetWeekdayשחרית(out bool isBold) {
 			isBold = false;
-			if (Date.Info.Isראשחודש) {
-				isBold = true;
-				return Time(6, 30, AM);
-			} else if (Holiday.Is(Holiday.חנוכה))
-				return Time(6, 30, AM);
-			else if (DayOfWeek == DayOfWeek.Monday || DayOfWeek == DayOfWeek.Thursday)
-				return Time(6, 35, AM);
-			else
-				return Time(6, 45, AM);
+			return Time(7, 00, AM);
+//			if (Date.Info.Isראשחודש) {
+//				isBold = true;
+//				return Time(6, 30, AM);
+//			} else if (Holiday.Is(Holiday.חנוכה))
+//				return Time(6, 30, AM);
+//			else if (DayOfWeek == DayOfWeek.Monday || DayOfWeek == DayOfWeek.Thursday)
+//				return Time(6, 35, AM);
+//			else
+//				return Time(6, 45, AM);
 		}
 		static HebrewDate GetSelichosStart(int hebrewYear) {
 			var rh = Holiday.ראש٠השנה.Days.First().Date.GetDate(hebrewYear + 1);
@@ -402,15 +403,15 @@ namespace ShomreiTorah.Schedules {
 				}
 				#endregion
 
-//				if (dafYomi == דףיומיType.Beforeשיעור)
-//					yield return new ScheduleValue(dafYomiString, shiurTime - TimeSpan.FromHours(1));
+				//				if (dafYomi == דףיומיType.Beforeשיעור)
+				//					yield return new ScheduleValue(dafYomiString, shiurTime - TimeSpan.FromHours(1));
 				if ((Date + 7).Info.Holiday?.Name == "שבת שובה")
 					yield return new ScheduleValue("שיעור לנשים", shiurTime - TimeSpan.FromHours(1));
 				if (Hasשבת٠הגדול٠דרשה(Date + 7))
 					yield return new ScheduleValue("דרשה לנשים", shiurTime - TimeSpan.FromMinutes(65));
 
-//				if (dafYomi == דףיומיType.Beforeמנחה)
-//					yield return new ScheduleValue(dafYomiString, actualמנחה - TimeSpan.FromHours(1));
+				//				if (dafYomi == דףיומיType.Beforeמנחה)
+				//					yield return new ScheduleValue(dafYomiString, actualמנחה - TimeSpan.FromHours(1));
 				else        //When דף יומי isn't right before מנחה, there is a שיעור
 					yield return new ScheduleValue(isדרשה ? "דרשה" : "שיעור", shiurTime);
 
@@ -547,15 +548,19 @@ namespace ShomreiTorah.Schedules {
 				}
 				yield return new ScheduleValue("מנחה", mincha);
 				yield return new ScheduleValue("מעריב", mincha + TimeSpan.FromMinutes(65));
+
 			}
+
 
 			if (HasLateCandleLighting()) {
 				yield return new ScheduleValue("Candle Lighting", Zmanim.Sunset + TimeSpan.FromMinutes(72));
 			}
 			if (dafYomi == דףיומיType.NightAlone) {
-//				yield return new ScheduleValue(amudYomiString, Time(9, 15, PM));
+				var mincha = (Zmanim.Sunset - TimeSpan.FromMinutes(15)).RoundDown();
+				yield return new ScheduleValue("מנחה", mincha);
+				yield return new ScheduleValue("מעריב", Zmanim.Sunset + TimeSpan.FromMinutes(3));
 				yield return new ScheduleValue(amudYomiString, Time(9, 00, PM));
-				yield return new ScheduleValue("מעריב", Time(10, 00, PM));
+//				yield return new ScheduleValue("מעריב", Time(10, 00, PM));
 			} else if (dafYomi == דףיומיType.WeekNight) {
 				var hasמשנהברורה = Date.EnglishDate.Year >= 2013
 				 && Date < new DateTime(2015, 6, 1)
