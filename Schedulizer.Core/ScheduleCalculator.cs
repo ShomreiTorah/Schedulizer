@@ -560,7 +560,6 @@ namespace ShomreiTorah.Schedules {
 				yield return new ScheduleValue("מנחה", mincha);
 				yield return new ScheduleValue("מעריב", Zmanim.Sunset + TimeSpan.FromMinutes(3));
 				yield return new ScheduleValue(amudYomiString, Time(9, 00, PM));
-//				yield return new ScheduleValue("מעריב", Time(10, 00, PM));
 			} else if (dafYomi == דףיומיType.WeekNight) {
 				var hasמשנהברורה = Date.EnglishDate.Year >= 2013
 				 && Date < new DateTime(2015, 6, 1)
@@ -586,9 +585,8 @@ namespace ShomreiTorah.Schedules {
 				} else {
 					if (hasמשנהברורה)
 						yield return new ScheduleValue("משנה ברורה", Time(8, 45, PM));
-//					yield return new ScheduleValue(amudYomiString, Time(9, 15, PM));
 					yield return new ScheduleValue(amudYomiString, Time(9, 00, PM));
-					yield return new ScheduleValue("מעריב", Time(10, 00, PM));
+//					yield return new ScheduleValue("מעריב", Time(10, 00, PM));
 
 				}
 			}
