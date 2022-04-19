@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schedulizer.Core", "Schedulizer.Core\Schedulizer.Core.csproj", "{A111D4E1-561F-405F-8FA4-6111A1D329B3}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShomreiTorah.Administration", "..\..\Libraries\ShomreiTorah.Administration\ShomreiTorah.Administration.csproj", "{C3F42838-56D1-49F4-A8CA-11242ECB76E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schedulizer.Dumper", "Schedulizer.Dumper\Schedulizer.Dumper.csproj", "{368DED7D-B870-455E-9EF0-A6F8901C7A3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schedulizer.Debugger", "Schedulizer.Debugger\Schedulizer.Debugger.csproj", "{9A4E45CB-1DBA-43AA-A64E-F1603BE9689C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{368DED7D-B870-455E-9EF0-A6F8901C7A3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{368DED7D-B870-455E-9EF0-A6F8901C7A3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{368DED7D-B870-455E-9EF0-A6F8901C7A3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A4E45CB-1DBA-43AA-A64E-F1603BE9689C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A4E45CB-1DBA-43AA-A64E-F1603BE9689C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A4E45CB-1DBA-43AA-A64E-F1603BE9689C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A4E45CB-1DBA-43AA-A64E-F1603BE9689C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,5 +67,8 @@ Global
 		{1308A6E1-7787-49F6-A19C-8AF327DAF9B5} = {3F57E3A7-E31A-4520-A3C4-CF86A0796EDD}
 		{0B927F97-8CDD-47CB-B775-CA1E0AB2409C} = {3F57E3A7-E31A-4520-A3C4-CF86A0796EDD}
 		{C3F42838-56D1-49F4-A8CA-11242ECB76E1} = {3F57E3A7-E31A-4520-A3C4-CF86A0796EDD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6D1A6A9E-BB80-4195-A0D9-8FC0DC4BA030}
 	EndGlobalSection
 EndGlobal
