@@ -467,9 +467,9 @@ namespace ShomreiTorah.Schedules.WinClient {
 		}
 
 		private void exportShulCloud_ItemClick(object sender, ItemClickEventArgs e) {
-			ProgressWorker.ExecuteAsync((progress, c) =>
-				new ShulCloudExporter().ExportRange(progress, context, calendar.MonthStart.Last(DayOfWeek.Sunday), 6)
-			);
+			ProgressWorker.Execute((progress) =>
+				new ShulCloudExporter().ExportRange(progress, context, calendar.MonthStart.Last(DayOfWeek.Sunday), 6).GetAwaiter().GetResult()
+			, true);
 		}
 	}
 	static class Extensions {

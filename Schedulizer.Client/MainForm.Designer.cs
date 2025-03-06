@@ -128,7 +128,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.exportWord.Caption = "Create Word Schedule";
 			this.exportWord.Id = 0;
-			this.exportWord.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ExportWord32;
+			this.exportWord.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ExportWord32;
 			this.exportWord.Name = "exportWord";
 			toolTipTitleItem1.Text = "Create Word Schedule";
 			toolTipItem1.LeftIndent = 6;
@@ -142,7 +142,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.exportPowerpoint.Caption = "Create Announcements";
 			this.exportPowerpoint.Id = 1;
-			this.exportPowerpoint.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ExportPowerPoint32;
+			this.exportPowerpoint.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ExportPowerPoint32;
 			this.exportPowerpoint.Name = "exportPowerpoint";
 			this.exportPowerpoint.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.exportPowerpoint_ItemClick);
 			// 
@@ -150,7 +150,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.openWord.Caption = "Open Word Schedule";
 			this.openWord.Id = 2;
-			this.openWord.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.OpenWord32;
+			this.openWord.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.OpenWord32;
 			this.openWord.Name = "openWord";
 			this.openWord.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.openWord_ItemClick);
 			// 
@@ -161,7 +161,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			this.allWordBinders.Caption = "Word  Schedules";
 			this.allWordBinders.DropDownControl = this.wordBinderMenu;
 			this.allWordBinders.Id = 8;
-			this.allWordBinders.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.AllWordDocuments32;
+			this.allWordBinders.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.AllWordDocuments32;
 			this.allWordBinders.Name = "allWordBinders";
 			// 
 			// wordBinderMenu
@@ -173,7 +173,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.wbUpdate.Caption = "Update Document";
 			this.wbUpdate.Id = 9;
-			this.wbUpdate.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.Refresh32;
+			this.wbUpdate.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.Refresh32;
 			this.wbUpdate.Name = "wbUpdate";
 			toolTipTitleItem2.Text = "Update Document";
 			toolTipItem2.LeftIndent = 6;
@@ -187,7 +187,6 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.wbWeekCountItem.Edit = this.wbWeekCountEdit;
 			this.wbWeekCountItem.EditValue = "5";
-			this.wbWeekCountItem.EditWidth = 80;
 			this.wbWeekCountItem.Id = 10;
 			this.wbWeekCountItem.Name = "wbWeekCountItem";
 			toolTipItem3.Text = "The number of weeks in the document.";
@@ -225,7 +224,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.wbSavePdf.Caption = "Create PDF";
 			this.wbSavePdf.Id = 11;
-			this.wbSavePdf.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.SaveAdobePdf32;
+			this.wbSavePdf.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.SaveAdobePdf32;
 			this.wbSavePdf.Name = "wbSavePdf";
 			toolTipTitleItem3.Text = "Create PDF";
 			toolTipItem4.LeftIndent = 6;
@@ -239,7 +238,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.wdUploadPdf.Caption = "Upload PDF";
 			this.wdUploadPdf.Id = 12;
-			this.wdUploadPdf.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.UploadAdobePdf32;
+			this.wdUploadPdf.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.UploadAdobePdf32;
 			this.wdUploadPdf.Name = "wdUploadPdf";
 			toolTipTitleItem4.Text = "Upload PDF";
 			toolTipItem5.LeftIndent = 6;
@@ -264,7 +263,6 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			// enableAutoSave
 			// 
-			this.enableAutoSave.BindableChecked = true;
 			this.enableAutoSave.Caption = "Save Automatically";
 			this.enableAutoSave.Checked = true;
 			this.enableAutoSave.Id = 14;
@@ -281,7 +279,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.doSave.Caption = "Save Now";
 			this.doSave.Id = 15;
-			this.doSave.ImageOptions.Image = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.Save16;
+			this.doSave.Glyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.Save16;
 			this.doSave.Name = "doSave";
 			this.doSave.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.doSave_ItemClick);
 			// 
@@ -289,7 +287,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.findWord.Caption = "Find Schedule";
 			this.findWord.Id = 16;
-			this.findWord.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.FindWord32;
+			this.findWord.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.FindWord32;
 			this.findWord.Name = "findWord";
 			toolTipTitleItem7.Text = "Find Schedule";
 			toolTipItem8.LeftIndent = 6;
@@ -304,7 +302,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.wbUpdateCell.Caption = "Update Cell";
 			this.wbUpdateCell.Id = 17;
-			this.wbUpdateCell.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.UpdateCell32;
+			this.wbUpdateCell.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.UpdateCell32;
 			this.wbUpdateCell.Name = "wbUpdateCell";
 			toolTipTitleItem8.Text = "Update Cell";
 			toolTipItem9.LeftIndent = 6;
@@ -319,7 +317,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			this.wbUpdateDirty.Caption = "Update Changed Cells";
 			this.wbUpdateDirty.Enabled = false;
 			this.wbUpdateDirty.Id = 18;
-			this.wbUpdateDirty.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.UpdateDirty32;
+			this.wbUpdateDirty.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.UpdateDirty32;
 			this.wbUpdateDirty.Name = "wbUpdateDirty";
 			toolTipTitleItem9.Text = "Update Changed Cells";
 			toolTipItem10.LeftIndent = 6;
@@ -334,7 +332,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.resetMonth.Caption = "Reset Month";
 			this.resetMonth.Id = 19;
-			this.resetMonth.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ResetMonth32;
+			this.resetMonth.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ResetMonth32;
 			this.resetMonth.Name = "resetMonth";
 			toolTipTitleItem10.Text = "Reset Month";
 			toolTipItem11.LeftIndent = 6;
@@ -349,7 +347,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.exportShulCloud.Caption = "Export to ShulCloud";
 			this.exportShulCloud.Id = 20;
-			this.exportShulCloud.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ShulCloud32;
+			this.exportShulCloud.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ShulCloud32;
 			this.exportShulCloud.Name = "exportShulCloud";
 			this.exportShulCloud.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.exportShulCloud_ItemClick);
 			// 

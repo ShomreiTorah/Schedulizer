@@ -66,17 +66,20 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevExpress.Data.v16.2, Version=16.2.15.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Data.v12.1, Version=12.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>DLLs\DevExpress.Data.v12.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Utils.v16.2, Version=16.2.15.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Utils.v12.1, Version=12.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>DLLs\DevExpress.Utils.v12.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraBars.v16.2, Version=16.2.15.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraBars.v12.1, Version=12.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>DLLs\DevExpress.XtraBars.v12.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraEditors.v16.2, Version=16.2.15.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraEditors.v12.1, Version=12.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>DLLs\DevExpress.XtraEditors.v12.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraPrinting.v16.2, Version=16.2.15.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-    </Reference>
-    <Reference Include="DevExpress.XtraGrid.v16.2, Version=16.2.15.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraGrid.v12.1, Version=12.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>DLLs\DevExpress.XtraGrid.v12.1.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.PowerPoint.Extensions, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Office.Interop.PowerPoint.Extensions.dll</HintPath>
@@ -192,10 +195,9 @@
       <Project>{1308a6e1-7787-49f6-a19c-8af327daf9b5}</Project>
       <Name>ShomreiTorah.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Libraries\ShomreiTorah.WinForms\ShomreiTorah.WinForms.csproj">
-      <Project>{0b927f97-8cdd-47cb-b775-ca1e0ab2409c}</Project>
-      <Name>ShomreiTorah.WinForms</Name>
-    </ProjectReference>
+    <Reference Include="ShomreiTorah.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>DLLs\ShomreiTorah.WinForms.dll</HintPath>
+    </Reference>
     <ProjectReference Include="..\Schedulizer.Core\Schedulizer.Core.csproj">
       <Project>{a111d4e1-561f-405f-8fa4-6111a1d329b3}</Project>
       <Name>Schedulizer.Core</Name>
