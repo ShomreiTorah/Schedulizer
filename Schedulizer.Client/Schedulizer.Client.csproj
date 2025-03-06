@@ -186,6 +186,7 @@
     <CodeAnalysisDictionary Include="..\..\..\Setup\Common\CustomDictionary.xml">
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
+    <None Include="Resources\ShulCloud32.png" />
     <Content Include="Schedulizer.ico" />
   </ItemGroup>
   <ItemGroup>

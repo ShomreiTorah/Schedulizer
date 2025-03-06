@@ -64,9 +64,11 @@ namespace ShomreiTorah.Schedules.WinClient {
 			this.wbUpdateCell = new DevExpress.XtraBars.BarButtonItem();
 			this.wbUpdateDirty = new DevExpress.XtraBars.BarButtonItem();
 			this.resetMonth = new DevExpress.XtraBars.BarButtonItem();
+			this.exportShulCloud = new DevExpress.XtraBars.BarButtonItem();
 			this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
 			this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
 			this.ribbonPageGroup4 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+			this.ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
 			this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
 			this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
 			this.dividerGroup = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -92,8 +94,10 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// ribbon
 			// 
 			this.ribbon.ApplicationIcon = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.RibbonIcon;
+			this.ribbon.ExpandCollapseItem.Id = 0;
 			this.ribbon.HighlightedItem = null;
 			this.ribbon.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
+            this.ribbon.ExpandCollapseItem,
             this.exportWord,
             this.exportPowerpoint,
             this.openWord,
@@ -108,15 +112,15 @@ namespace ShomreiTorah.Schedules.WinClient {
             this.findWord,
             this.wbUpdateCell,
             this.wbUpdateDirty,
-            this.resetMonth});
+            this.resetMonth,
+            this.exportShulCloud});
 			this.ribbon.Location = new System.Drawing.Point(0, 0);
-			this.ribbon.MaxItemId = 20;
+			this.ribbon.MaxItemId = 21;
 			this.ribbon.Name = "ribbon";
 			this.ribbon.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
 			this.ribbon.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.wbWeekCountEdit});
-			this.ribbon.SelectedPage = this.ribbonPage1;
 			this.ribbon.Size = new System.Drawing.Size(1059, 143);
 			this.ribbon.StatusBar = this.ribbonStatusBar;
 			// 
@@ -124,7 +128,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.exportWord.Caption = "Create Word Schedule";
 			this.exportWord.Id = 0;
-			this.exportWord.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ExportWord32;
+			this.exportWord.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ExportWord32;
 			this.exportWord.Name = "exportWord";
 			toolTipTitleItem1.Text = "Create Word Schedule";
 			toolTipItem1.LeftIndent = 6;
@@ -138,7 +142,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.exportPowerpoint.Caption = "Create Announcements";
 			this.exportPowerpoint.Id = 1;
-			this.exportPowerpoint.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ExportPowerPoint32;
+			this.exportPowerpoint.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ExportPowerPoint32;
 			this.exportPowerpoint.Name = "exportPowerpoint";
 			this.exportPowerpoint.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.exportPowerpoint_ItemClick);
 			// 
@@ -146,7 +150,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.openWord.Caption = "Open Word Schedule";
 			this.openWord.Id = 2;
-			this.openWord.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.OpenWord32;
+			this.openWord.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.OpenWord32;
 			this.openWord.Name = "openWord";
 			this.openWord.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.openWord_ItemClick);
 			// 
@@ -157,7 +161,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			this.allWordBinders.Caption = "Word  Schedules";
 			this.allWordBinders.DropDownControl = this.wordBinderMenu;
 			this.allWordBinders.Id = 8;
-			this.allWordBinders.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.AllWordDocuments32;
+			this.allWordBinders.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.AllWordDocuments32;
 			this.allWordBinders.Name = "allWordBinders";
 			// 
 			// wordBinderMenu
@@ -169,7 +173,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.wbUpdate.Caption = "Update Document";
 			this.wbUpdate.Id = 9;
-			this.wbUpdate.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.Refresh32;
+			this.wbUpdate.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.Refresh32;
 			this.wbUpdate.Name = "wbUpdate";
 			toolTipTitleItem2.Text = "Update Document";
 			toolTipItem2.LeftIndent = 6;
@@ -183,12 +187,12 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.wbWeekCountItem.Edit = this.wbWeekCountEdit;
 			this.wbWeekCountItem.EditValue = "5";
+			this.wbWeekCountItem.EditWidth = 80;
 			this.wbWeekCountItem.Id = 10;
 			this.wbWeekCountItem.Name = "wbWeekCountItem";
 			toolTipItem3.Text = "The number of weeks in the document.";
 			superToolTip3.Items.Add(toolTipItem3);
 			this.wbWeekCountItem.SuperTip = superToolTip3;
-			this.wbWeekCountItem.Width = 80;
 			this.wbWeekCountItem.EditValueChanged += new System.EventHandler(this.wbWeekCountItem_EditValueChanged);
 			// 
 			// wbWeekCountEdit
@@ -221,7 +225,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.wbSavePdf.Caption = "Create PDF";
 			this.wbSavePdf.Id = 11;
-			this.wbSavePdf.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.SaveAdobePdf32;
+			this.wbSavePdf.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.SaveAdobePdf32;
 			this.wbSavePdf.Name = "wbSavePdf";
 			toolTipTitleItem3.Text = "Create PDF";
 			toolTipItem4.LeftIndent = 6;
@@ -235,7 +239,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.wdUploadPdf.Caption = "Upload PDF";
 			this.wdUploadPdf.Id = 12;
-			this.wdUploadPdf.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.UploadAdobePdf32;
+			this.wdUploadPdf.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.UploadAdobePdf32;
 			this.wdUploadPdf.Name = "wdUploadPdf";
 			toolTipTitleItem4.Text = "Upload PDF";
 			toolTipItem5.LeftIndent = 6;
@@ -260,6 +264,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			// enableAutoSave
 			// 
+			this.enableAutoSave.BindableChecked = true;
 			this.enableAutoSave.Caption = "Save Automatically";
 			this.enableAutoSave.Checked = true;
 			this.enableAutoSave.Id = 14;
@@ -267,7 +272,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			toolTipTitleItem6.Text = "Save Automatically";
 			toolTipItem7.LeftIndent = 6;
 			toolTipItem7.Text = "If checked, any changes to the schedule will be saved to the database whenever yo" +
-				"u click a cell in the calendar.";
+    "u click a cell in the calendar.";
 			superToolTip7.Items.Add(toolTipTitleItem6);
 			superToolTip7.Items.Add(toolTipItem7);
 			this.enableAutoSave.SuperTip = superToolTip7;
@@ -275,8 +280,8 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// doSave
 			// 
 			this.doSave.Caption = "Save Now";
-			this.doSave.Glyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.Save16;
 			this.doSave.Id = 15;
+			this.doSave.ImageOptions.Image = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.Save16;
 			this.doSave.Name = "doSave";
 			this.doSave.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.doSave_ItemClick);
 			// 
@@ -284,12 +289,12 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.findWord.Caption = "Find Schedule";
 			this.findWord.Id = 16;
-			this.findWord.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.FindWord32;
+			this.findWord.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.FindWord32;
 			this.findWord.Name = "findWord";
 			toolTipTitleItem7.Text = "Find Schedule";
 			toolTipItem8.LeftIndent = 6;
 			toolTipItem8.Text = "Opens the Word schedule for this month, and creates it if it doesn\'t already exis" +
-				"t.";
+    "t.";
 			superToolTip8.Items.Add(toolTipTitleItem7);
 			superToolTip8.Items.Add(toolTipItem8);
 			this.findWord.SuperTip = superToolTip8;
@@ -299,7 +304,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.wbUpdateCell.Caption = "Update Cell";
 			this.wbUpdateCell.Id = 17;
-			this.wbUpdateCell.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.UpdateCell32;
+			this.wbUpdateCell.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.UpdateCell32;
 			this.wbUpdateCell.Name = "wbUpdateCell";
 			toolTipTitleItem8.Text = "Update Cell";
 			toolTipItem9.LeftIndent = 6;
@@ -314,12 +319,12 @@ namespace ShomreiTorah.Schedules.WinClient {
 			this.wbUpdateDirty.Caption = "Update Changed Cells";
 			this.wbUpdateDirty.Enabled = false;
 			this.wbUpdateDirty.Id = 18;
-			this.wbUpdateDirty.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.UpdateDirty32;
+			this.wbUpdateDirty.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.UpdateDirty32;
 			this.wbUpdateDirty.Name = "wbUpdateDirty";
 			toolTipTitleItem9.Text = "Update Changed Cells";
 			toolTipItem10.LeftIndent = 6;
 			toolTipItem10.Text = "Updates any cells that have changed since the Word schedule was last generated.  " +
-				"If the schedule hasn\'t changed, this button will be disabled.";
+    "If the schedule hasn\'t changed, this button will be disabled.";
 			superToolTip10.Items.Add(toolTipTitleItem9);
 			superToolTip10.Items.Add(toolTipItem10);
 			this.wbUpdateDirty.SuperTip = superToolTip10;
@@ -329,22 +334,31 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			this.resetMonth.Caption = "Reset Month";
 			this.resetMonth.Id = 19;
-			this.resetMonth.LargeGlyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ResetMonth32;
+			this.resetMonth.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ResetMonth32;
 			this.resetMonth.Name = "resetMonth";
 			toolTipTitleItem10.Text = "Reset Month";
 			toolTipItem11.LeftIndent = 6;
 			toolTipItem11.Text = "Recalculates all of the days in the schedule that are currently displayed on the " +
-				"calendar.";
+    "calendar.";
 			superToolTip11.Items.Add(toolTipTitleItem10);
 			superToolTip11.Items.Add(toolTipItem11);
 			this.resetMonth.SuperTip = superToolTip11;
 			this.resetMonth.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.resetMonth_ItemClick);
+			// 
+			// exportShulCloud
+			// 
+			this.exportShulCloud.Caption = "Export to ShulCloud";
+			this.exportShulCloud.Id = 20;
+			this.exportShulCloud.ImageOptions.LargeImage = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ShulCloud32;
+			this.exportShulCloud.Name = "exportShulCloud";
+			this.exportShulCloud.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.exportShulCloud_ItemClick);
 			// 
 			// ribbonPage1
 			// 
 			this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
             this.ribbonPageGroup3,
             this.ribbonPageGroup4,
+            this.ribbonPageGroup5,
             this.ribbonPageGroup1,
             this.ribbonPageGroup2,
             this.dividerGroup,
@@ -366,6 +380,14 @@ namespace ShomreiTorah.Schedules.WinClient {
 			this.ribbonPageGroup4.Name = "ribbonPageGroup4";
 			this.ribbonPageGroup4.ShowCaptionButton = false;
 			this.ribbonPageGroup4.Text = "Schedule";
+			// 
+			// ribbonPageGroup5
+			// 
+			this.ribbonPageGroup5.Glyph = global::ShomreiTorah.Schedules.WinClient.Properties.Resources.ShulCloud32;
+			this.ribbonPageGroup5.ItemLinks.Add(this.exportShulCloud);
+			this.ribbonPageGroup5.Name = "ribbonPageGroup5";
+			this.ribbonPageGroup5.ShowCaptionButton = false;
+			this.ribbonPageGroup5.Text = "ShulCloud";
 			// 
 			// ribbonPageGroup1
 			// 
@@ -409,10 +431,10 @@ namespace ShomreiTorah.Schedules.WinClient {
 			// 
 			// ribbonStatusBar
 			// 
-			this.ribbonStatusBar.Location = new System.Drawing.Point(0, 556);
+			this.ribbonStatusBar.Location = new System.Drawing.Point(0, 550);
 			this.ribbonStatusBar.Name = "ribbonStatusBar";
 			this.ribbonStatusBar.Ribbon = this.ribbon;
-			this.ribbonStatusBar.Size = new System.Drawing.Size(1059, 25);
+			this.ribbonStatusBar.Size = new System.Drawing.Size(1059, 31);
 			// 
 			// clientPanel
 			// 
@@ -421,7 +443,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			this.clientPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.clientPanel.Location = new System.Drawing.Point(0, 143);
 			this.clientPanel.Name = "clientPanel";
-			this.clientPanel.Size = new System.Drawing.Size(826, 413);
+			this.clientPanel.Size = new System.Drawing.Size(826, 407);
 			this.clientPanel.TabIndex = 2;
 			// 
 			// calendar
@@ -429,7 +451,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			this.calendar.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.calendar.Location = new System.Drawing.Point(0, 0);
 			this.calendar.Name = "calendar";
-			this.calendar.Size = new System.Drawing.Size(821, 411);
+			this.calendar.Size = new System.Drawing.Size(821, 407);
 			this.calendar.TabIndex = 0;
 			this.calendar.SelectionChanged += new System.EventHandler(this.calendar_SelectionChanged);
 			this.calendar.DateToolTip += new System.EventHandler<ShomreiTorah.WinForms.Controls.CalendarToolTipEventArgs>(this.calendar_DateToolTip);
@@ -454,15 +476,16 @@ namespace ShomreiTorah.Schedules.WinClient {
 			this.valueGridPanel.ID = new System.Guid("ca40ad3f-09bd-42ad-81f0-1be1b83bc6a4");
 			this.valueGridPanel.Location = new System.Drawing.Point(826, 143);
 			this.valueGridPanel.Name = "valueGridPanel";
-			this.valueGridPanel.Size = new System.Drawing.Size(233, 413);
+			this.valueGridPanel.OriginalSize = new System.Drawing.Size(233, 407);
+			this.valueGridPanel.Size = new System.Drawing.Size(233, 407);
 			this.valueGridPanel.Text = "Times";
 			// 
 			// dockPanel1_Container
 			// 
 			this.dockPanel1_Container.Controls.Add(this.cellEditor);
-			this.dockPanel1_Container.Location = new System.Drawing.Point(3, 25);
+			this.dockPanel1_Container.Location = new System.Drawing.Point(5, 23);
 			this.dockPanel1_Container.Name = "dockPanel1_Container";
-			this.dockPanel1_Container.Size = new System.Drawing.Size(227, 385);
+			this.dockPanel1_Container.Size = new System.Drawing.Size(224, 380);
 			this.dockPanel1_Container.TabIndex = 0;
 			// 
 			// cellEditor
@@ -470,7 +493,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			this.cellEditor.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.cellEditor.Location = new System.Drawing.Point(0, 0);
 			this.cellEditor.Name = "cellEditor";
-			this.cellEditor.Size = new System.Drawing.Size(227, 385);
+			this.cellEditor.Size = new System.Drawing.Size(224, 380);
 			this.cellEditor.TabIndex = 0;
 			// 
 			// ribbonFlashTimer
@@ -485,8 +508,8 @@ namespace ShomreiTorah.Schedules.WinClient {
 			this.ClientSize = new System.Drawing.Size(1059, 581);
 			this.Controls.Add(this.clientPanel);
 			this.Controls.Add(this.valueGridPanel);
-			this.Controls.Add(this.ribbon);
 			this.Controls.Add(this.ribbonStatusBar);
+			this.Controls.Add(this.ribbon);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size(300, 297);
 			this.Name = "MainForm";
@@ -502,6 +525,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 			this.valueGridPanel.ResumeLayout(false);
 			this.dockPanel1_Container.ResumeLayout(false);
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -540,5 +564,7 @@ namespace ShomreiTorah.Schedules.WinClient {
 		private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup4;
 		private DevExpress.XtraBars.BarButtonItem resetMonth;
 		private System.Windows.Forms.Timer ribbonFlashTimer;
+		private DevExpress.XtraBars.BarButtonItem exportShulCloud;
+		private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup5;
 	}
 }

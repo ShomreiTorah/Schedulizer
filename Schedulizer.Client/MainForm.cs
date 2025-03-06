@@ -200,8 +200,8 @@ namespace ShomreiTorah.Schedules.WinClient {
 		}
 
 		private void exportWord_ItemClick(object sender, ItemClickEventArgs e) {
-			HandleWord(true);	//If I don't call this now, I'll end up with two binders for the new document.
-			var binder = WordBinder.CreateDocument(context, calendar.MonthStart, 5, this);	//TODO: Error handling
+			HandleWord(true);   //If I don't call this now, I'll end up with two binders for the new document.
+			var binder = WordBinder.CreateDocument(context, calendar.MonthStart, 5, this);  //TODO: Error handling
 
 			AddWordBinder(binder);
 			RibbonBinder = binder;
@@ -464,6 +464,12 @@ namespace ShomreiTorah.Schedules.WinClient {
 
 		void IExportUIProvider.PerformOperation(Action<IProgressReporter> method, bool cancellable) {
 			Waiter.ExecAsync(method, "Exporting", cancellable);
+		}
+
+		private void exportShulCloud_ItemClick(object sender, ItemClickEventArgs e) {
+			ProgressWorker.ExecuteAsync((progress, c) =>
+				new ShulCloudExporter().ExportRange(progress, context, calendar.MonthStart.Last(DayOfWeek.Sunday), 6)
+			);
 		}
 	}
 	static class Extensions {
