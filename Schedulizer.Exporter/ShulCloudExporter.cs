@@ -18,6 +18,8 @@ namespace ShomreiTorah.Schedules.Export {
 		private readonly string calendarId = Config.ReadAttribute("Schedules", "ShulCloud", "CalendarId");
 
 		public ShulCloudExporter() {
+			ServicePointManager.Expect100Continue = true;
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 			httpHandler = new HttpClientHandler { CookieContainer = cookies };
 			httpClient = new HttpClient(httpHandler) {
 				BaseAddress = new Uri(Config.ReadAttribute("Schedules", "ShulCloud", "BaseAddress"))
