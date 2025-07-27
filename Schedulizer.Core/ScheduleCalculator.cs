@@ -681,7 +681,8 @@ namespace ShomreiTorah.Schedules
 					//בדיקת חמץ night has מנחה/מעריב, but not דף יומי
 					if (Date != בדיקה)
 					{
-						if (maariv > Time(8, 15, PM))
+						// if (maariv > Time(8, 15, PM))
+						if (false)
 						{
 							yield return new ScheduleValue(amudYomiString,
 								  maariv + TimeSpan.FromMinutes(15)
