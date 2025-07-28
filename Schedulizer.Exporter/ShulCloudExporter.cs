@@ -26,7 +26,7 @@ namespace ShomreiTorah.Schedules.Export {
 
 		public ShulCloudExporter() {
 			ServicePointManager.Expect100Continue = true;
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
 			httpHandler = new HttpClientHandler { CookieContainer = cookies };
 			httpClient = new HttpClient(httpHandler) {
 				BaseAddress = new Uri(Config.ReadAttribute("Schedules", "ShulCloud", "BaseAddress"))
