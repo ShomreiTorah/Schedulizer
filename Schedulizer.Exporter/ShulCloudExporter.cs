@@ -26,9 +26,22 @@ namespace ShomreiTorah.Schedules.Export {
 
 		public ShulCloudExporter() {
 			ServicePointManager.Expect100Continue = true;
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-			httpHandler = new HttpClientHandler { CookieContainer = cookies };
+			ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+			httpHandler = new HttpClientHandler { CookieContainer = cookies, AutomaticDecompression = DecompressionMethods.GZip };
 			httpClient = new HttpClient(httpHandler) {
+				DefaultRequestHeaders = {
+					// These 2 are required by the server, or we get a 406.
+					Accept = {new MediaTypeWithQualityHeaderValue("text/html"), new MediaTypeWithQualityHeaderValue("application/json")},
+					AcceptEncoding = {new StringWithQualityHeaderValue("gzip")},
+					// These 2 are not, but I added them anyway.  The parentheses are required by .Net's (client-side) parser.
+					AcceptLanguage = {new StringWithQualityHeaderValue("en-US")},
+					UserAgent = {
+						new ProductInfoHeaderValue("(ShomreiTorah/1.0)"),
+						new ProductInfoHeaderValue("(Shuls@SLaks.net)"),
+						new ProductInfoHeaderValue("(https://github.com/ShomreiTorah/Schedulizer/blob/master/Schedulizer.Exporter/ShulCloudExporter.cs)"),
+					},
+
+				},
 				BaseAddress = new Uri(Config.ReadAttribute("Schedules", "ShulCloud", "BaseAddress"))
 			};
 		}
