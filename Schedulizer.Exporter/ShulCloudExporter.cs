@@ -30,20 +30,16 @@ namespace ShomreiTorah.Schedules.Export {
 			httpHandler = new HttpClientHandler { CookieContainer = cookies, AutomaticDecompression = DecompressionMethods.GZip };
 			httpClient = new HttpClient(httpHandler) {
 				DefaultRequestHeaders = {
-					// These 2 are required by the server, or we get a 406.
+					// This is required by the server, or we get a 406.
 					Accept = {new MediaTypeWithQualityHeaderValue("text/html"), new MediaTypeWithQualityHeaderValue("application/json")},
-					AcceptEncoding = {new StringWithQualityHeaderValue("gzip")},
-					// These 2 are not, but I added them anyway.  The parentheses are required by .Net's (client-side) parser.
+					// This might not be required
 					AcceptLanguage = {new StringWithQualityHeaderValue("en-US")},
-					UserAgent = {
-						new ProductInfoHeaderValue("(ShomreiTorah/1.0)"),
-						new ProductInfoHeaderValue("(Shuls@SLaks.net)"),
-						new ProductInfoHeaderValue("(https://github.com/ShomreiTorah/Schedulizer/blob/master/Schedulizer.Exporter/ShulCloudExporter.cs)"),
-					},
 
 				},
 				BaseAddress = new Uri(Config.ReadAttribute("Schedules", "ShulCloud", "BaseAddress"))
 			};
+			// Without a normal-looking User-Agent, we get a 406.
+			httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 (Shuls@SLaks.net) (https://github.com/ShomreiTorah/Schedulizer/blob/master/Schedulizer.Exporter/ShulCloudExporter.cs)");
 		}
 
 		public async Task ExportRange(IProgressReporter progress, ScheduleContext context, DateTime startDate, int weeks) {
@@ -75,12 +71,16 @@ namespace ShomreiTorah.Schedules.Export {
 				{"email", Config.ReadAttribute("Schedules", "ShulCloud", "Login")},
 				{"password", Config.ReadAttribute("Schedules", "ShulCloud", "Password")},
 			})).ConfigureAwait(false);
+			if (loginResponse.StatusCode != HttpStatusCode.OK)
+				throw new InvalidOperationException($"Login request failed with {loginResponse.StatusCode}");
 			var loginPage = await loginResponse.Content.ReadAsStringAsync();
 			// <div class='error'>Invalid email or password. Please try again.</div>
 			if (loginPage.Contains("Invalid email or password")) throw new InvalidOperationException("ShulCloud login failed: Invalid email or password");
 
 			// Step 2: Extract the session ID from the JS response that starts Keycloak.
 			var productSessionId = findProductSessionId.Match(loginPage).Groups[1].Value;
+			if (string.IsNullOrWhiteSpace(productSessionId))
+				throw new InvalidOperationException("Cannot find productSessionId");
 			var redirectUri = $"https://shulcloud.com/callback/mfasuccess.php?product_session_id={productSessionId}";
 			//loginPage.Dump();
 
@@ -91,6 +91,8 @@ namespace ShomreiTorah.Schedules.Export {
 
 			// Find the <form> POST URL to submit the OTP to.
 			var authenticateUrl = WebUtility.HtmlDecode(findAuthenticateUrl.Match(authResponse).Value);
+			if (string.IsNullOrWhiteSpace(authenticateUrl))
+				throw new InvalidOperationException("Cannot find authenticateUrl");
 
 			// Step 4: Post the OTP code to the URL found in the OTP form response, which is stored on the server.
 			await httpClient.PostAsync(authenticateUrl, new FormUrlEncodedContent(new Dictionary<string, string> {

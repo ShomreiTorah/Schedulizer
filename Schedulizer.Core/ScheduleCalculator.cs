@@ -418,7 +418,7 @@ namespace ShomreiTorah.Schedules
 			if (Isשבת || Isיוםטוב)
 			{
 				#region שבת/יום טוב Afternoon
-				var defaultמנחה = GetDefaultערב٠שבת٠מנחה(Date - 1) - TimeSpan.FromMinutes(10);
+				var defaultמנחה = GetDefaultערב٠שבת٠מנחה(Date - 1) - TimeSpan.FromMinutes(15);
 
 				#region מנחה
 				var isמנחהBold = false;
