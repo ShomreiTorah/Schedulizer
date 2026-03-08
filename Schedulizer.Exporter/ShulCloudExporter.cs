@@ -26,7 +26,8 @@ namespace ShomreiTorah.Schedules.Export {
 
 		public ShulCloudExporter() {
 			ServicePointManager.Expect100Continue = true;
-			ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+			// Must use v1.2 to be consistent with Chrome and avoid getting flagged by Web Application Firewalls.
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 			httpHandler = new HttpClientHandler { CookieContainer = cookies, AutomaticDecompression = DecompressionMethods.GZip };
 			httpClient = new HttpClient(httpHandler) {
 				DefaultRequestHeaders = {
